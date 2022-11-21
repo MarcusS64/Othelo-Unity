@@ -23,9 +23,15 @@ public class ProbeMovement : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if(collision.tag != GameFlow.currenTurn)
+        if(collision.tag == GameFlow.currenTurn)
         {
             Destroy(gameObject);
         }
+        else
+        {
+            collision.tag = GameFlow.currenTurn;
+            Destroy(gameObject);
+        }
+
     }
 }

@@ -7,7 +7,6 @@ public class Node
     #region Properties
     int x, y;
     Node parent;
-    Point point;
     int score;
     float height;
     public List<Node> adjacentSquares;
@@ -15,14 +14,12 @@ public class Node
 
     public void SetParent(Node _parent) { parent = _parent; }
     public Node GetParent() { return parent; }
-    public Point GetCoordinates() { return point; }
     #endregion
 
     public Node(int x, int y)
     {
         this.x = x;
         this.y = y;
-        point = new Point(x, y);
         adjacentSquares = new List<Node>();
         height = 0f;
         visited = false;
@@ -41,20 +38,6 @@ public class Node
     public void SetAdjacentSquare(Node square)
     {
         adjacentSquares.Add(square);
-    }
-
-    public float Score(Point attractorP, Point repulsorP, Point borderP) //Why do we have to square the distance to each objective?
-    {
-        float distanceToAttractor = Mathf.Pow(GetDistance(attractorP), 2);
-        float distanceToRepulsor = Mathf.Pow(GetDistance(repulsorP), 2);
-        float distanceToEdge = Mathf.Pow(GetDistance(borderP), 2);
-        //Debug.Log("distAtt: " + distanceToAttractor + " distRep: " + distanceToRepulsor + " distBor: " + distanceToEdge);
-        return distanceToRepulsor - distanceToAttractor + 3 * distanceToEdge;
-    }
-
-    public float GetDistance(Point point)
-    {
-        return Mathf.Sqrt(Mathf.Pow(this.point.x - point.x, 2) + Mathf.Pow(this.point.y - point.y, 2));
     }
 
     public void SetAverageHeight(bool includeParent)
