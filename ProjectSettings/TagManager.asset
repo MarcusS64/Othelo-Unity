@@ -8,6 +8,8 @@ TagManager:
   - Black
   - probeUL
   - Empty
+  - Boundary
+  - Occupied
   layers:
   - Default
   - TransparentFX

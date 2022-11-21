@@ -8,7 +8,9 @@ public class Node
     int x, y;
     Node parent;
     public List<Node> adjacentSquares;
-    public bool visited;    
+    public bool visited;
+    public Color color;
+    public Vector2 worldPosition;
 
     public void SetParent(Node _parent) { parent = _parent; }
     public Node GetParent() { return parent; }
@@ -20,6 +22,12 @@ public class Node
         this.y = y;
         adjacentSquares = new List<Node>();
         visited = false;
+        color = Color.None;
+    }
+
+    public void SetWorldPos(float x, float y)
+    {
+        worldPosition = new Vector2(x, y);
     }
 
     public int X()
@@ -37,3 +45,11 @@ public class Node
         adjacentSquares.Add(square);
     }
 }
+
+public enum Color
+{
+    White,
+    Black,
+    None
+}
+

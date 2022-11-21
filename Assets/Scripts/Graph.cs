@@ -5,7 +5,7 @@ using UnityEngine;
 public class Graph
 {
     #region Properties
-    private Node[,] squares; //Was static
+    public Node[,] squares; //Was static
     private int graphWidth, graphHeight;
     public List<Node> Open { get; private set; }
     public List<Node> Closed { get; private set; }
