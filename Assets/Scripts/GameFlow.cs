@@ -25,14 +25,20 @@ public class GameFlow : MonoBehaviour
         float posYstart = -height * (nrOfTiles / 2);
         float posYend = height * (nrOfTiles / 2);
         Graph board = new Graph(nrOfTiles, nrOfTiles, 0);
+        int xCoord = 0;
+        int yCoord = 0;
         for (float x = posXstart; x < posXend; x += width) //float x = 0; x < width * nrOfTiles; x += width
         {
             //Instantiate(squareObj, new Vector2(x, 4), squareObj.rotation);
+            //MAke another pair of ints to keep track of the index of the squares!!!
             for (float y = posYstart; y < posYend; y += height)
             {
                 Instantiate(squareObj, new Vector2(x, y), squareObj.rotation);
-                //board.squares[(int)(x - posXstart), (int)(y - posYstart)].SetWorldPos(x, y);
+                board.squares[xCoord, yCoord].SetWorldPos(x, y);
+                yCoord++;
             }
+            yCoord = 0;
+            xCoord++;
         }
         currenTurn = "White";
         nextReady = true;

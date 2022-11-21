@@ -7,13 +7,15 @@ public class ClickOn : MonoBehaviour
 {
     public Transform tokenObj_w;
     public Transform tokenObj_b;
-    public Transform probeObj;
+    public GameObject probeObj;
     private int[,] directions = new int[,] { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
-    private List<Transform> probes;
+    (int x, int y)[] coords = new (int, int)[] { (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1) };
+    private List<GameObject> probes;
+
     // Start is called before the first frame update
     void Start()
     {
-        probes = new List<Transform>();
+        probes = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -42,7 +44,9 @@ public class ClickOn : MonoBehaviour
                 Instantiate(tokenObj_w, transform.position, tokenObj_w.rotation);
                 StartCoroutine(waitToChange());
                 GetComponent<BoxCollider2D>().enabled = false;
-                probes.Add(Instantiate(probeObj, transform.position, probeObj.rotation));
+            var probe = Instantiate(probeObj, transform.position, transform.rotation);
+                probes.Add(probe);
+            probes[0].GetComponent<ProbeMovement>().SetDirection(coords[2].x, coords[2].y);
             GameFlow.totalWhite += 1;
             }
             else
@@ -50,11 +54,13 @@ public class ClickOn : MonoBehaviour
                 Instantiate(tokenObj_b, transform.position, tokenObj_b.rotation);
                 StartCoroutine(waitToChange());
                 GetComponent<BoxCollider2D>().enabled = false;
-                //for (int i = 0; i < directions.Length; i++)
-                //{
-                //    Instantiate(probeObj, transform.position, probeObj.rotation);
-                //}
-                probes.Add(Instantiate(probeObj, transform.position, probeObj.rotation));
+            //for (int i = 0; i < directions.Length; i++)
+            //{
+            //    Instantiate(probeObj, transform.position, transform.rotation);
+            //}
+            var probe = Instantiate(probeObj, transform.position, transform.rotation);
+            probes.Add(probe);
+            probes[0].GetComponent<ProbeMovement>().SetDirection(coords[2].x, coords[2].y);
             GameFlow.totalBlack += 1;
             }
             //gameObject.tag = "Occupied";

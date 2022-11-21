@@ -19,6 +19,7 @@ public class ProbeMovement : MonoBehaviour
     {
         
     }
+
     public void SetDirection(int x, int y)
     {
         GetComponent<Rigidbody2D>().velocity = new Vector2(x, y) * 2;
