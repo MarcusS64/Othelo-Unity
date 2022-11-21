@@ -5,14 +5,15 @@ using UnityEngine;
 public class Agent : MonoBehaviour
 {
     double timer;
-    [SerializeField] double maxTime;
-    public bool active;
+    [SerializeField] double maxTimeOfSearch;
     [SerializeField] bool alphaBetaPruning;
+    public bool active;
 
     Node node;
     Node bestPlacement;
     Graph graph;
-    GameFlow gameFlow;
+    List<Graph> possibleMoves = new List<Graph>();
+    float alpha, beta;
 
     [SerializeField] Transform tokenObj_w;
     [SerializeField] Transform tokenObj_b;
@@ -24,8 +25,7 @@ public class Agent : MonoBehaviour
 
     void Start()
     {
-        graph = GetComponent<Graph>();
-        gameFlow = GetComponent<GameFlow>();
+        //graph = FindObjectOfType<GameFlow>();
         timer = 0;
         depthOfSearch = 0;
         amountOfNodesExamined = 0;
@@ -37,25 +37,29 @@ public class Agent : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            if (timer <= maxTime)
+            if (timer <= maxTimeOfSearch)
             {
-                searchBestMove();
+                SearchBestMove();
             }
             else
             {
-                placeToken();
+                PlaceToken();
+                ResetAgent();
                 active = false;
-                timer = 0;
             }
         }
     }
 
-    private void searchBestMove()
+    private void SearchBestMove()
     {
+        bestPlacement = null;
+        alpha = -Mathf.Infinity;
+        beta = Mathf.Infinity;
+
 
     }
 
-    private void placeToken()
+    private void PlaceToken()
     {
         if (GameFlow.currenTurn == "White")
         {
@@ -71,5 +75,13 @@ public class Agent : MonoBehaviour
             GetComponent<BoxCollider2D>().enabled = false;
             Instantiate(probeObj, transform.position, probeObj.rotation);
         }
+    }
+
+    private void ResetAgent()
+    {
+        timer = 0;
+        alpha= 0;
+        beta = 0;
+        bestPlacement = null;
     }
 }

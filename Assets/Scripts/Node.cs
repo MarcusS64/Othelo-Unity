@@ -8,7 +8,7 @@ public class Node
     int x, y;
     Node parent;
     public List<Node> adjacentSquares;
-    public bool visited;    
+    public bool visited;
 
     public void SetParent(Node _parent) { parent = _parent; }
     public Node GetParent() { return parent; }
