@@ -7,7 +7,7 @@ public class GameFlow : MonoBehaviour
     public Transform squareObj;
     private float width;
     private float height;
-    [SerializeField] private int nrOfTiles = 4;
+    [SerializeField] public int nrOfTiles = 4;
     public static string currenTurn;
     public static Change probeChange = Change.No;
     public Graph board;
@@ -43,6 +43,8 @@ public class GameFlow : MonoBehaviour
     {
         
     }
+
+
 }
 
 public enum Change
