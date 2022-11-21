@@ -15,4 +15,23 @@ public class ProbeMovement : MonoBehaviour
     {
         
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag == "Empty")
+        {
+            Destroy(gameObject);
+        }
+
+        if(collision.tag == GameFlow.currenTurn)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            collision.tag = GameFlow.currenTurn;
+            Destroy(gameObject);
+        }
+
+    }
 }
