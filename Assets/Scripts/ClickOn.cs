@@ -9,21 +9,21 @@ public class ClickOn : MonoBehaviour
     public Transform tokenObj_b;
     public Transform probeObj;
     private int[,] directions = new int[,] { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
-// Start is called before the first frame update
-void Start()
+    // Start is called before the first frame update
+    void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void OnMouseDown()
     {
-        if(GameFlow.currenTurn == "White")
+        if (GameFlow.currenTurn == "White")
         {
             Instantiate(tokenObj_w, transform.position, tokenObj_w.rotation);
             GameFlow.currenTurn = "Black";
@@ -37,6 +37,6 @@ void Start()
             GetComponent<BoxCollider2D>().enabled = false;
             Instantiate(probeObj, transform.position, probeObj.rotation);
         }
-        
+
     }
 }

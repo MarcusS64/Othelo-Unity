@@ -7,7 +7,7 @@ public class GameFlow : MonoBehaviour
     public Transform squareObj;
     private float width;
     private float height;
-    private int nrOfTiles = 4;
+    [SerializeField] private int nrOfTiles = 4;
     public static string currenTurn;
     // Start is called before the first frame update
     void Start()
