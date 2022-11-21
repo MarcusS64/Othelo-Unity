@@ -35,7 +35,6 @@ public class IslandGenerator : MonoBehaviour
         ConnectSquares(width, height, false);
         var nodes = GetRandomNode(squares[startX, startY]);
         squares[startX, startY].visited = true;
-        squares[startX, startY].SetHeight(0.5f, "start");
 
         Terrain terrain = GetComponent<Terrain>();
         terrain.terrainData = GenerateTerrain(terrain.terrainData);
@@ -66,7 +65,7 @@ public class IslandGenerator : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                heights[i, j] = squares[i, j].GetHeight();
+                //heights[i, j] = squares[i, j].GetHeight();
             }
         }
         return heights;
