@@ -252,6 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   squareObj: {fileID: 232615775798947966, guid: 5c46919ce02b4af4aa7fa273d7b689e4, type: 3}
+  nrOfTiles: 4
 --- !u!1001 &232615776133794699
 PrefabInstance:
   m_ObjectHideFlags: 0
