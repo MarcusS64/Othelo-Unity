@@ -18,11 +18,17 @@ public class Agent : MonoBehaviour
     [SerializeField] Transform tokenObj_b;
     [SerializeField] Transform probeObj;
 
+    [Header("Search Statistics")]
+    [SerializeField] int depthOfSearch;
+    [SerializeField] int amountOfNodesExamined;
+
     void Start()
     {
         graph = GetComponent<Graph>();
         gameFlow = GetComponent<GameFlow>();
         timer = 0;
+        depthOfSearch = 0;
+        amountOfNodesExamined = 0;
     }
 
     void Update()
@@ -38,7 +44,7 @@ public class Agent : MonoBehaviour
             else
             {
                 placeToken();
-                active= false;
+                active = false;
                 timer = 0;
             }
         }
