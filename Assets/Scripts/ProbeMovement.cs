@@ -11,7 +11,9 @@ public class ProbeMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GetComponent<Rigidbody2D>().velocity = new Vector2(-2, 2);
+        //GetComponent<CircleCollider2D>().enabled = false;
+        //StartCoroutine(activateDelay());
+        //GetComponent<Rigidbody2D>().velocity = new Vector2(-2, 2);
     }
 
     // Update is called once per frame
@@ -49,6 +51,12 @@ public class ProbeMovement : MonoBehaviour
     {
         destroyEvent?.Invoke();
     }
+
+    //IEnumerator activateDelay()
+    //{
+    //    yield return new WaitForSeconds(1);
+    //    GetComponent<CircleCollider2D>().enabled = true;
+    //}
 
     //private void OnTriggerExit2D(Collider2D collision)
     //{

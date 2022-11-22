@@ -36,37 +36,36 @@ public class ClickOn : MonoBehaviour
 
     private void OnMouseDown()
     {
-        //if (GameFlow.nextReady)
-        //{
-        //    GameFlow.nextReady = false;
-            if (GameFlow.currenTurn == "White")
-            {
-                Instantiate(tokenObj_w, transform.position, tokenObj_w.rotation);
-                StartCoroutine(waitToChange());
-                GetComponent<BoxCollider2D>().enabled = false;
-            var probe = Instantiate(probeObj, transform.position, transform.rotation);
-                probes.Add(probe);
-            probes[0].GetComponent<ProbeMovement>().SetDirection(coords[2].x, coords[2].y);
-            GameFlow.totalWhite += 1;
-            }
-            else
-            {
-                Instantiate(tokenObj_b, transform.position, tokenObj_b.rotation);
-                StartCoroutine(waitToChange());
-                GetComponent<BoxCollider2D>().enabled = false;
-            //for (int i = 0; i < directions.Length; i++)
+        if (GameFlow.currenTurn == "White")
+        {
+            Instantiate(tokenObj_w, transform.position, tokenObj_w.rotation);
+            StartCoroutine(waitToChange());
+            GetComponent<BoxCollider2D>().enabled = false;
+            //Instantiate(probeObj, transform.position, transform.rotation);
+            //for (int i = 0; i < coords.Length; i++)
             //{
-            //    Instantiate(probeObj, transform.position, transform.rotation);
+            //    probes.Add(Instantiate(probeObj, transform.position, transform.rotation));
+            //    probes[i].GetComponent<ProbeMovement>().SetDirection(coords[i].x, coords[i].y);
             //}
-            var probe = Instantiate(probeObj, transform.position, transform.rotation);
-            probes.Add(probe);
-            probes[0].GetComponent<ProbeMovement>().SetDirection(coords[2].x, coords[2].y);
+            GameFlow.totalWhite += 1;
+            GameFlow.SetColorForSquare(gameObject.transform.position.x, gameObject.transform.position.y, Color.White);
+        }
+        else
+        {
+            Instantiate(tokenObj_b, transform.position, tokenObj_b.rotation);
+            StartCoroutine(waitToChange());
+            GetComponent<BoxCollider2D>().enabled = false;
+            //Instantiate(probeObj, transform.position, transform.rotation);
+            //for (int i = 0; i < coords.Length; i++)
+            //{
+            //    probes.Add(Instantiate(probeObj, transform.position, transform.rotation));
+            //    probes[i].GetComponent<ProbeMovement>().SetDirection(coords[i].x, coords[i].y);
+            //}
+
+
             GameFlow.totalBlack += 1;
-            }
-            //gameObject.tag = "Occupied";
-        //}
-
-
+            GameFlow.SetColorForSquare(gameObject.transform.position.x, gameObject.transform.position.y, Color.Black);
+        }
     }
 
     private void CheckProbes()

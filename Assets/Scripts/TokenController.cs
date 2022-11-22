@@ -24,6 +24,7 @@ public class TokenController : MonoBehaviour
                 gameObject.tag = "White";
                 GameFlow.totalBlack -= 1;
                 GameFlow.totalWhite += 1;
+                GameFlow.SetColorForSquare(gameObject.transform.position.x, gameObject.transform.position.y, Color.White);
                 //currentColor = gameObject.tag;
             }
             else if ((GameFlow.probeChange == Change.Yes) && (currentColor == "White"))
@@ -31,7 +32,8 @@ public class TokenController : MonoBehaviour
                 GetComponent<SpriteRenderer>().color = new UnityEngine.Color(0, 0, 0);
                 gameObject.tag = "Black";
                 GameFlow.totalWhite -= 1;
-                GameFlow.totalBlack += 1;
+                GameFlow.totalBlack += 1;                
+                GameFlow.SetColorForSquare(gameObject.transform.position.x, gameObject.transform.position.y, Color.Black);
                 //currentColor = gameObject.tag;
             }
 

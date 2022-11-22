@@ -109,4 +109,14 @@ public class Graph
         return squares[i, j];
     }
 
+    //public void DoSomethingWithSquare(int x, int y)
+    //{
+    //    Node node = squares[x, y];
+    //}
+
+    //public void SetColorForSquare(int x, int y, Color newColor)
+    //{
+    //    squares[x, y].SetColor(newColor);
+    //}
+
 }

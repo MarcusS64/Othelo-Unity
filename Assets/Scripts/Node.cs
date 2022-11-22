@@ -44,6 +44,11 @@ public class Node
     {
         adjacentSquares.Add(square);
     }
+
+    public void SetColor(Color newColor)
+    {
+        color = newColor;
+    }
 }
 
 public enum Color
