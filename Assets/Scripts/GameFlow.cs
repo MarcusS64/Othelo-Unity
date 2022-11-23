@@ -9,7 +9,7 @@ public class GameFlow : MonoBehaviour
     private static float height;
     [SerializeField] public int nrOfTiles = 4;
     public static string currenTurn;
-    public (int x, int y)[] coords = new (int, int)[] { (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1) };
+    public static (int x, int y)[] coords = new (int, int)[] { (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1) };
     public static Change probeChange = Change.No; //Might need one for each direction
     public static Graph board;
     public static bool nextReady;
@@ -48,6 +48,11 @@ public class GameFlow : MonoBehaviour
             //Debug.Log("x value: " + x + ". X coord value is: " + (x - posXstart) / width);
             xCoord++;
         }
+        for (int i = 0; i < coords.Length; i++)
+        {
+
+        }
+
         currenTurn = "White";
         nextReady = true;
     }

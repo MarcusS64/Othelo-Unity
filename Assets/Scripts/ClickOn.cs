@@ -42,11 +42,11 @@ public class ClickOn : MonoBehaviour
             StartCoroutine(waitToChange());
             GetComponent<BoxCollider2D>().enabled = false;
             //Instantiate(probeObj, transform.position, transform.rotation);
-            //for (int i = 0; i < coords.Length; i++)
-            //{
-            //    probes.Add(Instantiate(probeObj, transform.position, transform.rotation));
-            //    probes[i].GetComponent<ProbeMovement>().SetDirection(coords[i].x, coords[i].y);
-            //}
+            for (int i = 0; i < coords.Length; i++)
+            {
+                probes.Add(Instantiate(probeObj, transform.position, transform.rotation));
+                probes[i].GetComponent<ProbeMovement>().SetDirection(coords[i].x, coords[i].y);
+            }
             GameFlow.totalWhite += 1;
             GameFlow.SetColorForSquare(gameObject.transform.position.x, gameObject.transform.position.y, Color.White);
         }
@@ -56,11 +56,11 @@ public class ClickOn : MonoBehaviour
             StartCoroutine(waitToChange());
             GetComponent<BoxCollider2D>().enabled = false;
             //Instantiate(probeObj, transform.position, transform.rotation);
-            //for (int i = 0; i < coords.Length; i++)
-            //{
-            //    probes.Add(Instantiate(probeObj, transform.position, transform.rotation));
-            //    probes[i].GetComponent<ProbeMovement>().SetDirection(coords[i].x, coords[i].y);
-            //}
+            for (int i = 0; i < coords.Length; i++)
+            {
+                probes.Add(Instantiate(probeObj, transform.position, transform.rotation));
+                probes[i].GetComponent<ProbeMovement>().SetDirection(coords[i].x, coords[i].y);
+            }
 
 
             GameFlow.totalBlack += 1;

@@ -28,9 +28,9 @@ public class Graph
 
             }
         }
-
-        ConnectSquares(N, M, true);
-        ConnectSquares(N, M, false);
+        ConnectEverySquare();
+        //ConnectSquares(N, M, true);
+        //ConnectSquares(N, M, false);
     }
 
     private void SetProperties(int N, int M, int generation)
@@ -43,7 +43,7 @@ public class Graph
         Generation = generation;
     }
 
-    private void ConnectSquares(int width, int height, bool horizontal) //Was static
+    private void ConnectSquares(int width, int height, bool horizontal) //Does not connect the diagonal
     {
         if (horizontal) { width--; }
         else { height--; }
@@ -61,6 +61,26 @@ public class Graph
                 {
                     squares[i, j].SetAdjacentSquare(squares[i, j + 1]);
                     squares[i, j + 1].SetAdjacentSquare(squares[i, j]);
+                }
+            }
+        }
+    }
+
+    private void ConnectEverySquare() //Does connect the diagonal
+    {
+        for (int i = 0; i < graphWidth; i++)
+        {
+            for (int j = 0; j < graphHeight; j++)
+            {
+                for (int k = 0; k < GameFlow.coords.Length; k++)
+                {
+                    int x = i - GameFlow.coords[k].x;
+                    int y = j - GameFlow.coords[k].y;
+                    if (x < graphWidth && y < graphHeight && x >= 0 && y >= 0) //If not then there is no square to connect
+                    {
+                        squares[i, j].SetAdjacentSquare(squares[x, y]);
+                        squares[x, y].SetAdjacentSquare(squares[i, j]);
+                    }
                 }
             }
         }
@@ -108,15 +128,4 @@ public class Graph
     {
         return squares[i, j];
     }
-
-    //public void DoSomethingWithSquare(int x, int y)
-    //{
-    //    Node node = squares[x, y];
-    //}
-
-    //public void SetColorForSquare(int x, int y, Color newColor)
-    //{
-    //    squares[x, y].SetColor(newColor);
-    //}
-
 }

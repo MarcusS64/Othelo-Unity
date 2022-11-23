@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class ProbeMovement : MonoBehaviour
 {
     public static event Action destroyEvent;
+    public List<GameObject> tokens;
     //public delegate void HandleProbeDestroyed();
     // Start is called before the first frame update
     void Start()
@@ -14,6 +15,7 @@ public class ProbeMovement : MonoBehaviour
         //GetComponent<CircleCollider2D>().enabled = false;
         //StartCoroutine(activateDelay());
         //GetComponent<Rigidbody2D>().velocity = new Vector2(-2, 2);
+        tokens = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -29,21 +31,34 @@ public class ProbeMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "Empty")
+        if(collision.tag != "probeUL")
         {
-            GameFlow.probeChange = Change.Reverse;
-            Destroy(gameObject);
+            if (collision.tag == "Empty")
+            {
+                //GameFlow.probeChange = Change.Reverse;
+                foreach (GameObject token in tokens)
+                {
+                    token.GetComponentInChildren<TokenController>().Reverse();
+                }
+                Destroy(gameObject);
+            }
+            else if (collision.tag == GameFlow.currenTurn)
+            {
+                //GameFlow.probeChange = Change.Yes;
+                foreach (GameObject token in tokens)
+                {
+                    token.GetComponentInChildren<TokenController>().Yes();
+                }
+                Destroy(gameObject);
+            }
+            else
+            {
+                //collision.tag = gameObject.tag;
+                tokens.Add(collision.gameObject);
+                //Destroy(gameObject);
+            }
         }
-        else if(collision.tag == GameFlow.currenTurn)
-        {
-            GameFlow.probeChange = Change.Yes;
-            Destroy(gameObject);
-        }
-        else
-        {
-            collision.tag = gameObject.tag;
-            //Destroy(gameObject);
-        }
+        
 
     }
 
