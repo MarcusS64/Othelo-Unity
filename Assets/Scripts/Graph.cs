@@ -5,6 +5,7 @@ using UnityEngine;
 public class Graph
 {
     #region Properties
+    private Graph parent;
     public Node[,] squares; //Was static
     private int graphWidth, graphHeight;
     public List<Node> Open { get; private set; }
@@ -12,6 +13,9 @@ public class Graph
 
     public Node CurrentNode { get; private set; }
     public int Generation { get; private set; }
+    public void SetParent(Graph _parent) { parent = _parent; }
+    public Graph GetParent() { return parent; }
+    public Node nextMove;
 
     //public Node[] PlayerGoalSquares { get; private set; }
     //public Node[] OpponentGoalSquares { get; private set; }
@@ -127,5 +131,10 @@ public class Graph
     public Node GetSquare(int i, int j)
     {
         return squares[i, j];
+    }
+
+    public void SetMove(Node move)
+    {
+        nextMove = move;
     }
 }

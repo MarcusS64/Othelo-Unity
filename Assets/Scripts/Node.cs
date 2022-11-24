@@ -49,6 +49,11 @@ public class Node
     {
         color = newColor;
     }
+
+    public Color GetColor()
+    {
+        return color;
+    }
 }
 
 public enum Color
