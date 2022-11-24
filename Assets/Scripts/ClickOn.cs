@@ -48,7 +48,7 @@ public class ClickOn : MonoBehaviour
                 probes[i].GetComponent<ProbeMovement>().SetDirection(coords[i].x, coords[i].y);
             }
             GameFlow.totalWhite += 1;
-            GameFlow.SetColorForSquare(gameObject.transform.position.x, gameObject.transform.position.y, Color.White);
+            GameFlow.SetColorForSquare(gameObject.transform.position.x, gameObject.transform.position.y, Color.White); 
         }
         else
         {

@@ -16,6 +16,8 @@ public class Graph
     public void SetParent(Graph _parent) { parent = _parent; }
     public Graph GetParent() { return parent; }
     public Node nextMove;
+    public int whiteNodes, blackNodes;
+    public bool visited;
 
     //public Node[] PlayerGoalSquares { get; private set; }
     //public Node[] OpponentGoalSquares { get; private set; }
@@ -86,6 +88,21 @@ public class Graph
                         squares[x, y].SetAdjacentSquare(squares[i, j]);
                     }
                 }
+            }
+        }
+    }
+
+    public void CountNodes()
+    {
+        blackNodes = 0;
+        whiteNodes = 0;
+
+        for (int i = 0; i < graphWidth; i++)
+        {
+            for (int j = 0; j < graphHeight; j++)
+            {
+                if (squares[i, j].color == Color.Black) blackNodes++;
+                if (squares[i, j].color == Color.White) whiteNodes++;
             }
         }
     }

@@ -8,6 +8,7 @@ public class ProbeMovement : MonoBehaviour
 {
     public static event Action destroyEvent;
     public List<GameObject> tokens;
+    [SerializeField] int speed;
     //public delegate void HandleProbeDestroyed();
     // Start is called before the first frame update
     void Start()
@@ -26,7 +27,7 @@ public class ProbeMovement : MonoBehaviour
 
     public void SetDirection(int x, int y)
     {
-        GetComponent<Rigidbody2D>().velocity = new Vector2(x, y) * 2;
+        GetComponent<Rigidbody2D>().velocity = new Vector2(x, y) * speed;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
