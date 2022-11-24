@@ -80,13 +80,13 @@ public class Agent : MonoBehaviour
         }
     }
 
-    private void FindAvailableStates(Graph graph)
+    private void FindAvailableStates(Graph parentGraph) //Create a new child graph for each possible move for the parent graph
     {
         List<Graph> possibleStates = new List<Graph>();
         foreach (Node move in possibleMoves)
         {
-            Graph newBoardState = graph;
-            newBoardState.SetParent(graph);
+            Graph newBoardState = parentGraph;
+            newBoardState.SetParent(parentGraph);
             newBoardState.SetMove(move);
             if (myMove)
             {
