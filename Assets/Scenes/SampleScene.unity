@@ -333,6 +333,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1251101553}
   - component: {fileID: 1251101554}
+  - component: {fileID: 1251101555}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -369,6 +370,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   squareObj: {fileID: 232615775798947966, guid: 5c46919ce02b4af4aa7fa273d7b689e4, type: 3}
   nrOfTiles: 4
+--- !u!114 &1251101555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1251101552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aaf2e4962edeb7429c7acf38372726a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxTimeOfSearch: 5
+  alphaBetaPruning: 0
+  active: 0
+  tokenObj_w: {fileID: 0}
+  tokenObj_b: {fileID: 0}
+  probeObj: {fileID: 0}
+  depthOfSearch: 0
+  maxDepthOfSearch: 5
+  amountOfNodesExamined: 0
 --- !u!1 &1425681594
 GameObject:
   m_ObjectHideFlags: 0
