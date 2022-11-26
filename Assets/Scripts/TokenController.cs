@@ -46,6 +46,7 @@ public class TokenController : MonoBehaviour
         //    gameObject.tag = "White";
         //}
     }
+
     public void Yes()
     {
         if (currentColor == "Black")

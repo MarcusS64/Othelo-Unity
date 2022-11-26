@@ -85,12 +85,17 @@ public class Agent : MonoBehaviour
         List<Graph> possibleStates = new List<Graph>();
         foreach (Node move in possibleMoves)
         {
-            Graph newBoardState = parentGraph;
+            Graph newBoardState = new Graph(parentGraph.GetWidth(), parentGraph.GetHeight(), depthOfSearch);
+            CopyParentToChild(newBoardState, parentGraph);
             newBoardState.SetParent(parentGraph);
             newBoardState.SetMove(move);
             if (myMove)
             {
                 newBoardState.squares[move.X(), move.Y()].SetColor(agentColor);
+                for (int i = 0; i < GameFlow.coords.Length; i++)
+                {
+
+                }
             }
             else
             {
@@ -111,6 +116,17 @@ public class Agent : MonoBehaviour
             myMove = true;
         }
 
+    }
+
+    private void CopyParentToChild(Graph child, Graph parent)
+    {
+        for (int i = 0; i < child.GetWidth(); i++)
+        {
+            for (int j = 0; j < child.GetHeight(); j++)
+            {
+                child.squares[i, j] = parent.squares[i, j];
+            }
+        }
     }
 
     private void SearchBestMove()

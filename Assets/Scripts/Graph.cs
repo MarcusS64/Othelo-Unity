@@ -107,6 +107,62 @@ public class Graph
         }
     }
 
+    public void ProbeGraph(int startX, int startY, Color turnColor)
+    {
+        List<Probe> probes = new List<Probe>();
+        for (int i = 0; i < GameFlow.coords.Length; i++)
+        {
+            probes.Add(new Probe(GameFlow.coords[i].x, GameFlow.coords[i].x, turnColor)); //need the agent color here
+        }
+
+        bool allProbesDone = false;
+
+        do
+        {
+            foreach (Probe probe in probes)
+            {               
+                if (!probe.done)
+                {
+                    probe.Move();
+                    if (probe.GetX() < graphWidth && probe.GetX() >= 0 && probe.GetY() < graphHeight && probe.GetY() >= 0)
+                    {
+                        if (squares[probe.GetX(), probe.GetY()].color == Color.None)
+                        {
+                            probe.done = true;
+                        }
+                        else if (squares[probe.GetX(), probe.GetY()].color != probe.currentStateTurn)
+                        {
+                            probe.nodesToFlip.Add(squares[probe.GetX(), probe.GetY()]);
+                        }
+                        else
+                        {
+                            probe.FlipNodes();
+                            probe.done = true;
+                        }
+                    }
+                    else
+                    {
+                        probe.done = true;
+                    }
+                }                                
+            }
+
+            int number = 0;
+            foreach (Probe probe in probes)
+            {               
+                if (probe.done)
+                {
+                    number++;
+                }
+            }
+            if(number == probes.Count)
+            {
+                allProbesDone = true;
+            }
+
+        } while (!allProbesDone);
+    }
+
     #region Pathfinding
     public Node FindSquare(int x, int y)
     {

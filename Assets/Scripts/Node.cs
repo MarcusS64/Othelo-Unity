@@ -9,6 +9,7 @@ public class Node
     Node parent;
     public List<Node> adjacentSquares;
     public bool visited;
+    public bool changeColor;
     public Color color;
     public Vector2 worldPosition;
 
@@ -22,7 +23,9 @@ public class Node
         this.y = y;
         adjacentSquares = new List<Node>();
         visited = false;
+        changeColor = false;
         color = Color.None;
+
     }
 
     public void SetWorldPos(float x, float y)
