@@ -12,12 +12,13 @@ public class Agent : MonoBehaviour
 
     Node node;
     Node bestPlacement;
+    Graph bestBoardAlternative;
     Graph graph;
     Color agentColor;
     bool myMove;
     List<List<Graph>> ListOfDepth = new List<List<Graph>>();
     List<Node> possibleMoves = new List<Node>();
-    Stack<Graph> s = new Stack<Graph>();
+    //Stack<Graph> s = new Stack<Graph>();
     float alpha, beta;
 
     [SerializeField] Transform tokenObj_w;
@@ -92,15 +93,15 @@ public class Agent : MonoBehaviour
             if (myMove)
             {
                 newBoardState.squares[move.X(), move.Y()].SetColor(agentColor);
-                for (int i = 0; i < GameFlow.coords.Length; i++)
-                {
-
-                }
+                newBoardState.ProbeGraph(move.X(), move.Y(), agentColor);
             }
             else
             {
                 newBoardState.squares[move.X(), move.Y()].SetColor(Color.White);
+                newBoardState.ProbeGraph(move.X(), move.Y(), Color.White);
             }
+
+            float numberOfBlackNodes = newBoardState.CountBlackNodes();
 
             possibleStates.Add(newBoardState);
         }
@@ -136,6 +137,7 @@ public class Agent : MonoBehaviour
         alpha = -Mathf.Infinity;
         beta = Mathf.Infinity;
 
+        bestBoardAlternative = null;
         ListOfDepth.Clear();
         List<Graph> currentBoard = new List<Graph>();
         currentBoard.Add(GameFlow.board);
@@ -151,7 +153,9 @@ public class Agent : MonoBehaviour
             depthOfSearch++;
         }
 
-        
+        //find bestBoardAlternative by comparing alpha and beta
+
+        retracePath(GameFlow.board, bestBoardAlternative);
     }
 
     void retracePath(Graph startGraph, Graph goalGraph)

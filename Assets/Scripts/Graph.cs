@@ -92,19 +92,34 @@ public class Graph
         }
     }
 
-    public void CountNodes()
+    public float CountBlackNodes()
     {
         blackNodes = 0;
-        whiteNodes = 0;
 
         for (int i = 0; i < graphWidth; i++)
         {
             for (int j = 0; j < graphHeight; j++)
             {
                 if (squares[i, j].color == Color.Black) blackNodes++;
+            }
+        }
+
+        return blackNodes;
+    }
+
+    public float CountWhiteNodes()
+    {
+        whiteNodes = 0;
+
+        for (int i = 0; i < graphWidth; i++)
+        {
+            for (int j = 0; j < graphHeight; j++)
+            {
                 if (squares[i, j].color == Color.White) whiteNodes++;
             }
         }
+
+        return whiteNodes;
     }
 
     public void ProbeGraph(int startX, int startY, Color turnColor)
