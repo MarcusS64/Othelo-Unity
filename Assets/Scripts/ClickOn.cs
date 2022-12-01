@@ -41,7 +41,6 @@ public class ClickOn : MonoBehaviour
             Instantiate(tokenObj_w, transform.position, tokenObj_w.rotation);
             StartCoroutine(waitToChange());
             GetComponent<BoxCollider2D>().enabled = false;
-            //Instantiate(probeObj, transform.position, transform.rotation);
             for (int i = 0; i < coords.Length; i++)
             {
                 probes.Add(Instantiate(probeObj, transform.position, transform.rotation));
@@ -55,14 +54,11 @@ public class ClickOn : MonoBehaviour
             Instantiate(tokenObj_b, transform.position, tokenObj_b.rotation);
             StartCoroutine(waitToChange());
             GetComponent<BoxCollider2D>().enabled = false;
-            //Instantiate(probeObj, transform.position, transform.rotation);
             for (int i = 0; i < coords.Length; i++)
             {
                 probes.Add(Instantiate(probeObj, transform.position, transform.rotation));
                 probes[i].GetComponent<ProbeMovement>().SetDirection(coords[i].x, coords[i].y);
             }
-
-
             GameFlow.totalBlack += 1;
             GameFlow.SetColorForSquare(gameObject.transform.position.x, gameObject.transform.position.y, Color.Black);
         }
@@ -86,5 +82,6 @@ public class ClickOn : MonoBehaviour
         }
         GameFlow.probeChange = Change.No;
         Debug.Log(GameFlow.currenTurn);
+        GameFlow.ActivateAgent();
     }
 }

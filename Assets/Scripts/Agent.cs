@@ -15,15 +15,17 @@ public class Agent : MonoBehaviour
     Graph bestBoardAlternative;
     Graph graph;
     Color agentColor;
-    bool myMove;
+    bool isMyTurn;
+    Node myMove;
     List<List<Graph>> ListOfDepth = new List<List<Graph>>();
     List<Node> possibleMoves = new List<Node>();
+    List<GameObject> probes = new List<GameObject>();
     //Stack<Graph> s = new Stack<Graph>();
     float alpha, beta;
 
     [SerializeField] Transform tokenObj_w;
     [SerializeField] Transform tokenObj_b;
-    [SerializeField] Transform probeObj;
+    [SerializeField] GameObject probeObj;
 
     [Header("Search Statistics")]
     [SerializeField] int depthOfSearch;
@@ -47,7 +49,8 @@ public class Agent : MonoBehaviour
 
             if (timer <= maxTimeOfSearch)
             {
-                SearchBestMove();
+                //SearchBestMove();
+                FindRandomMove();
             }
             else
             {
@@ -56,6 +59,17 @@ public class Agent : MonoBehaviour
                 active = false;
             }
         }
+    }
+
+    private void FindRandomMove()
+    {
+        Graph currentBoard = new Graph(GameFlow.board.GetWidth(), GameFlow.board.GetHeight(), depthOfSearch);
+        CopyParentToChild(currentBoard, GameFlow.board);
+        currentBoard.SetTurnColor(agentColor);
+
+        currentBoard.FindAvailableMoves();
+
+        myMove = currentBoard.possibleMoves[Random.Range(0, possibleMoves.Count)];
     }
 
     private void FindAvailableMoves(Graph board) //Should be done once per board state
@@ -90,7 +104,7 @@ public class Agent : MonoBehaviour
             CopyParentToChild(newBoardState, parentGraph);
             newBoardState.SetParent(parentGraph);
             newBoardState.SetMove(move);
-            if (myMove)
+            if (isMyTurn)
             {
                 newBoardState.squares[move.X(), move.Y()].SetColor(agentColor);
                 newBoardState.ProbeGraph(move.X(), move.Y(), agentColor);
@@ -108,13 +122,13 @@ public class Agent : MonoBehaviour
 
         ListOfDepth.Add(possibleStates);
 
-        if (myMove)
+        if (isMyTurn)
         {
-            myMove = false;
+            isMyTurn = false;
         }
         else
         {
-            myMove = true;
+            isMyTurn = true;
         }
 
     }
@@ -138,18 +152,23 @@ public class Agent : MonoBehaviour
         beta = Mathf.Infinity;
 
         bestBoardAlternative = null;
-        ListOfDepth.Clear();
-        List<Graph> currentBoard = new List<Graph>();
-        currentBoard.Add(GameFlow.board);
-        ListOfDepth.Add(currentBoard);
+        //ListOfDepth.Clear();
+        //List<Graph> currentBoard = new List<Graph>();
+        //currentBoard.Add(GameFlow.board);
+        //ListOfDepth.Add(currentBoard);
+        Graph currentBoard = new Graph(GameFlow.board.GetWidth(), GameFlow.board.GetHeight(), depthOfSearch);
+        CopyParentToChild(currentBoard, GameFlow.board);
+        currentBoard.SetTurnColor(agentColor);
 
         while (depthOfSearch < maxDepthOfSearch)
         {
-            for (int i = 0; i < ListOfDepth[depthOfSearch].Count; i++)
-            {
-                FindAvailableMoves(ListOfDepth[depthOfSearch][i]);
-                FindAvailableStates(ListOfDepth[depthOfSearch][i]);
-            }
+            currentBoard.FindAvailableMoves();
+            currentBoard.FindAvailableStates();
+            //for (int i = 0; i < ListOfDepth[depthOfSearch].Count; i++)
+            //{
+            //    FindAvailableMoves(ListOfDepth[depthOfSearch][i]);
+            //    FindAvailableStates(ListOfDepth[depthOfSearch][i]);
+            //}
             depthOfSearch++;
         }
 
@@ -170,20 +189,63 @@ public class Agent : MonoBehaviour
 
     private void PlaceToken()
     {
+        //if (GameFlow.currenTurn == "White")
+        //{
+        //    Instantiate(tokenObj_w, transform.position, tokenObj_w.rotation);
+        //    GameFlow.currenTurn = "Black";
+        //    GetComponent<BoxCollider2D>().enabled = false;
+        //    Instantiate(probeObj, transform.position, probeObj.rotation);
+        //}
+        //else
+        //{
+        //    Instantiate(tokenObj_b, transform.position, tokenObj_b.rotation);
+        //    GameFlow.currenTurn = "White";
+        //    GetComponent<BoxCollider2D>().enabled = false;
+        //    Instantiate(probeObj, transform.position, probeObj.rotation);
+        //}
+
+        //transform.position should be the position on the board/move that it picked by myMove
         if (GameFlow.currenTurn == "White")
         {
             Instantiate(tokenObj_w, transform.position, tokenObj_w.rotation);
-            GameFlow.currenTurn = "Black";
+            StartCoroutine(waitToChange());
             GetComponent<BoxCollider2D>().enabled = false;
-            Instantiate(probeObj, transform.position, probeObj.rotation);
+            for (int i = 0; i < GameFlow.coords.Length; i++)
+            {
+                probes.Add(Instantiate(probeObj, transform.position, transform.rotation));
+                probes[i].GetComponent<ProbeMovement>().SetDirection(GameFlow.coords[i].x, GameFlow.coords[i].y);
+            }
+            GameFlow.totalWhite += 1;
+            GameFlow.SetColorForSquare(gameObject.transform.position.x, gameObject.transform.position.y, Color.White);
         }
         else
         {
             Instantiate(tokenObj_b, transform.position, tokenObj_b.rotation);
-            GameFlow.currenTurn = "White";
+            StartCoroutine(waitToChange());
             GetComponent<BoxCollider2D>().enabled = false;
-            Instantiate(probeObj, transform.position, probeObj.rotation);
+            for (int i = 0; i < GameFlow.coords.Length; i++)
+            {
+                probes.Add(Instantiate(probeObj, transform.position, transform.rotation));
+                probes[i].GetComponent<ProbeMovement>().SetDirection(GameFlow.coords[i].x, GameFlow.coords[i].y);
+            }
+            GameFlow.totalBlack += 1;
+            GameFlow.SetColorForSquare(gameObject.transform.position.x, gameObject.transform.position.y, Color.Black);
         }
+    }
+
+    IEnumerator waitToChange()
+    {
+        yield return new WaitForSeconds(4);
+        if (GameFlow.currenTurn == "White")
+        {
+            GameFlow.currenTurn = "Black";
+        }
+        else
+        {
+            GameFlow.currenTurn = "White";
+        }
+        GameFlow.probeChange = Change.No;
+        Debug.Log(GameFlow.currenTurn);
     }
 
     private void ResetAgent()

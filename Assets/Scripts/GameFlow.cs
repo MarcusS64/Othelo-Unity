@@ -19,6 +19,7 @@ public class GameFlow : MonoBehaviour
     public static float posYend;
     [SerializeField] public static int totalWhite = 0;
     [SerializeField] public static int totalBlack = 0;
+    [SerializeField] public static Agent agent;
     // Start is called before the first frame update
     void Start()
     {
@@ -63,14 +64,19 @@ public class GameFlow : MonoBehaviour
         
     }
 
-    public void DoSomethingWithSquare(int x, int y)
-    {
-        Node node = board.squares[x, y];
-    }
-
     public static void SetColorForSquare(float x, float y, Color newColor)
     {
         board.squares[(int)((x - posXstart) / width), (int)((y - posYstart) / height)].SetColor(newColor);
+    }
+
+    public static Vector2 GetSquareToWorldPos(int squareX, int squareY)
+    {
+        return new Vector2(squareX * width + posXstart, squareY * height + posYstart);
+    }
+
+    public static void ActivateAgent()
+    {
+        agent.active = true;
     }
 }
 

@@ -12,13 +12,15 @@ public class Graph
     public List<Node> Closed { get; private set; }
 
     public Node CurrentNode { get; private set; }
-    public int Generation { get; private set; }
+    public int Depth { get; private set; }
     public void SetParent(Graph _parent) { parent = _parent; }
     public Graph GetParent() { return parent; }
+    public List<Graph> children;
+    public List<Node> possibleMoves;
     public Node nextMove;
     public int whiteNodes, blackNodes;
     public bool visited;
-
+    public Color currentTurnColor;
     //public Node[] PlayerGoalSquares { get; private set; }
     //public Node[] OpponentGoalSquares { get; private set; }
     #endregion   
@@ -35,18 +37,26 @@ public class Graph
             }
         }
         ConnectEverySquare();
+        children = new List<Graph>();
+        possibleMoves = new List<Node>();
+
         //ConnectSquares(N, M, true);
         //ConnectSquares(N, M, false);
     }
 
-    private void SetProperties(int N, int M, int generation)
+    private void SetProperties(int N, int M, int depth)
     {
         Open = new List<Node>();
         Closed = new List<Node>();
         squares = new Node[N, M];
         graphWidth = N;
         graphHeight = M;
-        Generation = generation;
+        Depth = depth;
+    }
+
+    public void SetTurnColor(Color color)
+    {
+        currentTurnColor = color;
     }
 
     private void ConnectSquares(int width, int height, bool horizontal) //Does not connect the diagonal
@@ -78,7 +88,7 @@ public class Graph
         {
             for (int j = 0; j < graphHeight; j++)
             {
-                for (int k = 0; k < GameFlow.coords.Length; k++)
+                for (int k = 0; k < GameFlow.coords.Length; k++)//Loops through all the squares in the 8 directions around the square
                 {
                     int x = i - GameFlow.coords[k].x;
                     int y = j - GameFlow.coords[k].y;
@@ -178,6 +188,65 @@ public class Graph
         } while (!allProbesDone);
     }
 
+    public void FindAvailableMoves() //Should be done once per board state
+    {
+        for (int i = 0; i < graphWidth; i++)
+        {
+            for (int j = 0; j < graphHeight; j++)
+            {
+                if (squares[i, j].GetColor() != Color.None)
+                {
+                    foreach (Node square in squares[i, j].adjacentSquares)
+                    {
+                        if (square.color == Color.None && !square.visited)
+                        {
+                            possibleMoves.Add(square);
+                            square.visited = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void FindAvailableStates() //Create a new child graph for each possible move for the parent graph
+    {
+        foreach (Node move in possibleMoves)
+        {
+            Graph newBoardState = new Graph(graphWidth, graphHeight, Depth + 1);
+            CopyParentToChild(newBoardState);
+            newBoardState.SetParent(this);
+            newBoardState.SetMove(move);
+            if (currentTurnColor == Color.White)
+            {
+                newBoardState.squares[move.X(), move.Y()].SetColor(Color.Black);
+                newBoardState.ProbeGraph(move.X(), move.Y(), Color.Black);
+            }
+            else
+            {
+                newBoardState.squares[move.X(), move.Y()].SetColor(Color.White);
+                newBoardState.ProbeGraph(move.X(), move.Y(), Color.White);
+            }
+
+            float numberOfBlackNodes = newBoardState.CountBlackNodes();
+
+            children.Add(newBoardState);
+        }
+    }
+
+    private void CopyParentToChild(Graph child)
+    {
+        for (int i = 0; i < child.GetWidth(); i++)
+        {
+            for (int j = 0; j < child.GetHeight(); j++)
+            {
+                child.squares[i, j] = squares[i, j];
+                child.squares[i, j].visited = false;
+            }
+        }
+    }
+
+
     #region Pathfinding
     public Node FindSquare(int x, int y)
     {
@@ -224,5 +293,10 @@ public class Graph
     public void SetMove(Node move)
     {
         nextMove = move;
+    }
+
+    public Node GetMove()
+    {
+        return nextMove;
     }
 }
