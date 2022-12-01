@@ -385,9 +385,9 @@ MonoBehaviour:
   maxTimeOfSearch: 5
   alphaBetaPruning: 0
   active: 0
-  tokenObj_w: {fileID: 0}
-  tokenObj_b: {fileID: 0}
-  probeObj: {fileID: 0}
+  tokenObj_w: {fileID: 7142749954183742815, guid: 064b39d54e9dcd047b12f586d556587b, type: 3}
+  tokenObj_b: {fileID: 5150683685733085945, guid: 49a599119f3cd764090a4ae5b330a9a1, type: 3}
+  probeObj: {fileID: 4491611201185118935, guid: 3570232578265e048be8d59d9d4397c6, type: 3}
   depthOfSearch: 0
   maxDepthOfSearch: 5
   amountOfNodesExamined: 0
