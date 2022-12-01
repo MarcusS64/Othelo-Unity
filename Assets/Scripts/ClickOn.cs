@@ -36,7 +36,7 @@ public class ClickOn : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (GameFlow.currenTurn == "White")
+        if (GameFlow.currentTurn == "White")
         {
             Instantiate(tokenObj_w, transform.position, tokenObj_w.rotation);
             StartCoroutine(waitToChange());
@@ -72,16 +72,16 @@ public class ClickOn : MonoBehaviour
     IEnumerator waitToChange()
     {
         yield return new WaitForSeconds(4);
-        if(GameFlow.currenTurn == "White")
+        if(GameFlow.currentTurn == "White")
         {
-            GameFlow.currenTurn = "Black";
+            GameFlow.currentTurn = "Black";
         }
         else
         {
-            GameFlow.currenTurn = "White";
+            GameFlow.currentTurn = "White";
         }
         GameFlow.probeChange = Change.No;
-        Debug.Log(GameFlow.currenTurn);
-        GameFlow.ActivateAgent();
+        Debug.Log(GameFlow.currentTurn);
+        GameFlow.agent.ToggleActivation();
     }
 }

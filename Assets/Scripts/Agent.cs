@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -32,6 +33,8 @@ public class Agent : MonoBehaviour
     [SerializeField] int maxDepthOfSearch;
     [SerializeField] int amountOfNodesExamined;
 
+    bool foundMove;
+
     void Start()
     {
         //graph = FindObjectOfType<GameFlow>();
@@ -47,7 +50,7 @@ public class Agent : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            if (timer <= maxTimeOfSearch)
+            if (timer <= maxTimeOfSearch && !foundMove)
             {
                 //SearchBestMove();
                 FindRandomMove();
@@ -57,6 +60,7 @@ public class Agent : MonoBehaviour
                 PlaceToken();
                 ResetAgent();
                 active = false;
+                foundMove = false;
             }
         }
     }
@@ -69,7 +73,9 @@ public class Agent : MonoBehaviour
 
         currentBoard.FindAvailableMoves();
 
-        myMove = currentBoard.possibleMoves[Random.Range(0, possibleMoves.Count)];
+        myMove = currentBoard.possibleMoves[Random.Range(0, possibleMoves.Count - 1)];
+
+        foundMove = true;
     }
 
     private void FindAvailableMoves(Graph board) //Should be done once per board state
@@ -152,29 +158,47 @@ public class Agent : MonoBehaviour
         beta = Mathf.Infinity;
 
         bestBoardAlternative = null;
-        //ListOfDepth.Clear();
-        //List<Graph> currentBoard = new List<Graph>();
-        //currentBoard.Add(GameFlow.board);
-        //ListOfDepth.Add(currentBoard);
+
         Graph currentBoard = new Graph(GameFlow.board.GetWidth(), GameFlow.board.GetHeight(), depthOfSearch);
         CopyParentToChild(currentBoard, GameFlow.board);
         currentBoard.SetTurnColor(agentColor);
 
-        while (depthOfSearch < maxDepthOfSearch)
-        {
-            currentBoard.FindAvailableMoves();
-            currentBoard.FindAvailableStates();
-            //for (int i = 0; i < ListOfDepth[depthOfSearch].Count; i++)
-            //{
-            //    FindAvailableMoves(ListOfDepth[depthOfSearch][i]);
-            //    FindAvailableStates(ListOfDepth[depthOfSearch][i]);
-            //}
-            depthOfSearch++;
-        }
+        generateTree(currentBoard);
 
         //find bestBoardAlternative by comparing alpha and beta
 
-        retracePath(GameFlow.board, bestBoardAlternative);
+        if (alphaBetaPruning) alphaBetaPruningAlgorithm(currentBoard);
+        else minMaxAlgorithm(currentBoard);
+
+        retracePath(currentBoard, bestBoardAlternative);
+    }
+
+    private void generateTree(Graph childboard)
+    {
+        childboard.FindAvailableMoves();
+        childboard.FindAvailableStates();
+
+        depthOfSearch++;
+
+        foreach (Graph child in childboard.children)
+        {
+            if (depthOfSearch >= maxDepthOfSearch)
+            {
+                depthOfSearch--;
+                return;
+            }
+            generateTree(child);
+        }
+    }
+
+    private void alphaBetaPruningAlgorithm(Graph CurrentBoard)
+    {
+
+    }
+
+    private void minMaxAlgorithm(Graph currentBoard)
+    {
+
     }
 
     void retracePath(Graph startGraph, Graph goalGraph)
@@ -187,32 +211,50 @@ public class Agent : MonoBehaviour
         }
     }
 
+    public void ToggleActivation()
+    {
+        active = !active;
+    }
+
     private void PlaceToken()
     {
-        //if (GameFlow.currenTurn == "White")
+        //if (GameFlow.currentTurn == "White")
         //{
         //    Instantiate(tokenObj_w, transform.position, tokenObj_w.rotation);
-        //    GameFlow.currenTurn = "Black";
+        //    GameFlow.currentTurn = "Black";
         //    GetComponent<BoxCollider2D>().enabled = false;
         //    Instantiate(probeObj, transform.position, probeObj.rotation);
         //}
         //else
         //{
         //    Instantiate(tokenObj_b, transform.position, tokenObj_b.rotation);
-        //    GameFlow.currenTurn = "White";
+        //    GameFlow.currentTurn = "White";
         //    GetComponent<BoxCollider2D>().enabled = false;
         //    Instantiate(probeObj, transform.position, probeObj.rotation);
         //}
 
         //transform.position should be the position on the board/move that it picked by myMove
-        if (GameFlow.currenTurn == "White")
+
+        Vector2 tokenPos = myMove.worldPosition;
+
+        GameObject[] tiles = GameObject.FindGameObjectsWithTag("Empty");
+        foreach (GameObject go in tiles)
         {
-            Instantiate(tokenObj_w, transform.position, tokenObj_w.rotation);
+            if (Vector2.Distance(go.transform.position, myMove.worldPosition) < 1)
+            {
+                go.GetComponent<Collider2D>().enabled = false;
+            }
+        }
+
+        probes.Clear();
+
+        if (GameFlow.currentTurn == "White")
+        {
+            Instantiate(tokenObj_w, tokenPos, tokenObj_w.rotation);
             StartCoroutine(waitToChange());
-            GetComponent<BoxCollider2D>().enabled = false;
             for (int i = 0; i < GameFlow.coords.Length; i++)
             {
-                probes.Add(Instantiate(probeObj, transform.position, transform.rotation));
+                probes.Add(Instantiate(probeObj, tokenPos, transform.rotation));
                 probes[i].GetComponent<ProbeMovement>().SetDirection(GameFlow.coords[i].x, GameFlow.coords[i].y);
             }
             GameFlow.totalWhite += 1;
@@ -220,13 +262,12 @@ public class Agent : MonoBehaviour
         }
         else
         {
-            Instantiate(tokenObj_b, transform.position, tokenObj_b.rotation);
+            Instantiate(tokenObj_b, tokenPos, tokenObj_b.rotation);
             StartCoroutine(waitToChange());
-            GetComponent<BoxCollider2D>().enabled = false;
             for (int i = 0; i < GameFlow.coords.Length; i++)
             {
-                probes.Add(Instantiate(probeObj, transform.position, transform.rotation));
-                probes[i].GetComponent<ProbeMovement>().SetDirection(GameFlow.coords[i].x, GameFlow.coords[i].y);
+                probes.Add(Instantiate(probeObj, tokenPos, transform.rotation));
+                if (probes[i].GetComponent<ProbeMovement>()) probes[i].GetComponent<ProbeMovement>().SetDirection(GameFlow.coords[i].x, GameFlow.coords[i].y);
             }
             GameFlow.totalBlack += 1;
             GameFlow.SetColorForSquare(gameObject.transform.position.x, gameObject.transform.position.y, Color.Black);
@@ -236,16 +277,16 @@ public class Agent : MonoBehaviour
     IEnumerator waitToChange()
     {
         yield return new WaitForSeconds(4);
-        if (GameFlow.currenTurn == "White")
+        if (GameFlow.currentTurn == "White")
         {
-            GameFlow.currenTurn = "Black";
+            GameFlow.currentTurn = "Black";
         }
         else
         {
-            GameFlow.currenTurn = "White";
+            GameFlow.currentTurn = "White";
         }
         GameFlow.probeChange = Change.No;
-        Debug.Log(GameFlow.currenTurn);
+        Debug.Log(GameFlow.currentTurn);
     }
 
     private void ResetAgent()

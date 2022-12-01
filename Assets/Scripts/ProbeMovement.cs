@@ -43,7 +43,7 @@ public class ProbeMovement : MonoBehaviour
                 }
                 Destroy(gameObject);
             }
-            else if (collision.tag == GameFlow.currenTurn)
+            else if (collision.tag == GameFlow.currentTurn)
             {
                 //GameFlow.probeChange = Change.Yes;
                 foreach (GameObject token in tokens)

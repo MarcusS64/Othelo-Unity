@@ -8,7 +8,7 @@ public class GameFlow : MonoBehaviour
     private static float width;
     private static float height;
     [SerializeField] public int nrOfTiles = 4;
-    public static string currenTurn;
+    public static string currentTurn;
     public static (int x, int y)[] coords = new (int, int)[] { (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1) };
     public static Change probeChange = Change.No; //Might need one for each direction
     public static Graph board;
@@ -23,7 +23,8 @@ public class GameFlow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        agent = GetComponent<Agent>();
+
         width = squareObj.GetComponent<SpriteRenderer>().bounds.size.x;
         height = squareObj.GetComponent<SpriteRenderer>().bounds.size.y;
         posXstart = -width * (nrOfTiles / 2);
@@ -54,7 +55,7 @@ public class GameFlow : MonoBehaviour
 
         }
 
-        currenTurn = "White";
+        currentTurn = "White";
         nextReady = true;
     }
 
@@ -74,10 +75,10 @@ public class GameFlow : MonoBehaviour
         return new Vector2(squareX * width + posXstart, squareY * height + posYstart);
     }
 
-    public static void ActivateAgent()
-    {
-        agent.active = true;
-    }
+    //public static void ActivateAgent()
+    //{
+    //    agent.active = true;
+    //}
 }
 
 public enum Change
