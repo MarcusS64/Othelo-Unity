@@ -67,6 +67,7 @@ public class Agent : MonoBehaviour
 
     private void FindRandomMove()
     {
+        
         Graph currentBoard = new Graph(GameFlow.board.GetWidth(), GameFlow.board.GetHeight(), depthOfSearch);
         CopyParentToChild(currentBoard, GameFlow.board);
         currentBoard.SetTurnColor(agentColor);
@@ -146,6 +147,7 @@ public class Agent : MonoBehaviour
             for (int j = 0; j < child.GetHeight(); j++)
             {
                 child.squares[i, j] = parent.squares[i, j];
+                child.squares[i, j].visited = false;
             }
         }
     }
@@ -258,7 +260,7 @@ public class Agent : MonoBehaviour
                 probes[i].GetComponent<ProbeMovement>().SetDirection(GameFlow.coords[i].x, GameFlow.coords[i].y);
             }
             GameFlow.totalWhite += 1;
-            GameFlow.SetColorForSquare(gameObject.transform.position.x, gameObject.transform.position.y, Color.White);
+            GameFlow.SetColorForSquare(tokenPos, Color.White);
         }
         else
         {
@@ -270,7 +272,7 @@ public class Agent : MonoBehaviour
                 if (probes[i].GetComponent<ProbeMovement>()) probes[i].GetComponent<ProbeMovement>().SetDirection(GameFlow.coords[i].x, GameFlow.coords[i].y);
             }
             GameFlow.totalBlack += 1;
-            GameFlow.SetColorForSquare(gameObject.transform.position.x, gameObject.transform.position.y, Color.Black);
+            GameFlow.SetColorForSquare(tokenPos, Color.Black);
         }
     }
 

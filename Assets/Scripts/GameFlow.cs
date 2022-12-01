@@ -33,26 +33,22 @@ public class GameFlow : MonoBehaviour
         posYend = height * (nrOfTiles / 2);
         board = new Graph(nrOfTiles, nrOfTiles, 0);
         int xCoord = 0;
-        int yCoord = 0;
+        int yCoord = nrOfTiles - 1;
         Debug.Log("Width: " + width);
         for (float x = posXstart; x < posXend; x += width) //float x = 0; x < width * nrOfTiles; x += width
         {
             //Instantiate(squareObj, new Vector2(x, 4), squareObj.rotation);
             for (float y = posYstart; y < posYend; y += height)
             {
-                Instantiate(squareObj, new Vector2(x, y), squareObj.rotation);
-                board.squares[xCoord, yCoord].SetWorldPos(x, y);
+                Instantiate(squareObj, new Vector2(x + width / 2, y + height / 2), squareObj.rotation); //+ width/ 2
+                board.squares[xCoord, yCoord].SetWorldPos(x + width / 2, y + height / 2);
                 //(x - posXstart) / width) + " " + (y - posYstart) / height);
-                yCoord++;
+                yCoord--;
             }
-            yCoord = 0;
+            yCoord = nrOfTiles - 1;
             
             //Debug.Log("x value: " + x + ". X coord value is: " + (x - posXstart) / width);
             xCoord++;
-        }
-        for (int i = 0; i < coords.Length; i++)
-        {
-
         }
 
         currentTurn = "White";
@@ -65,9 +61,21 @@ public class GameFlow : MonoBehaviour
         
     }
 
-    public static void SetColorForSquare(float x, float y, Color newColor)
+    public static void SetColorForSquare(Vector2 worldPos, Color newColor)
     {
-        board.squares[(int)((x - posXstart) / width), (int)((y - posYstart) / height)].SetColor(newColor);
+        for (int i = 0; i < board.GetWidth(); i++)
+        {
+            for (int j = 0; j < board.GetHeight(); j++)
+            {
+                if (Vector2.Distance(board.squares[i, j].worldPosition, worldPos) <= 0.3f) //Vector2.Distance(board.squares[i, j].worldPosition, worldPos) <= 0.1f
+                {
+                    board.squares[i, j].SetColor(newColor);
+                    //Debug.Log("Square to set color: " + i + ", " + j);
+                }
+
+            }
+        }
+        //board.squares[(int)((worldPos.x - posXstart) / width), (int)((worldPos.y - posYstart) / height)].SetColor(newColor);
     }
 
     public static Vector2 GetSquareToWorldPos(int squareX, int squareY)
