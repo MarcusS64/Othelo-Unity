@@ -44,6 +44,28 @@ public class Node
         adjacentSquares.Add(square);
     }
 
+    //public void AdjacentNode(Node[,] graph)
+    //{
+    //    for (int i = -1; i <= 1; i++)
+    //    {
+    //        for (int j = -1; j <= 1; j++)
+    //        {
+    //            if (i == 0 && j == 0) continue;
+
+    //            int x = this.x + i;
+    //            int y = this.y + j;
+
+    //            if (x >= 0 && x < GameFlow.width && y >= 0 && y < 32)
+    //            {
+    //                if (x == this.x || y == this.x)
+    //                {
+    //                    adjacentSquares.Add(graph[x, y]);
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
+
     public void SetColor(Color newColor)
     {
         color = newColor;

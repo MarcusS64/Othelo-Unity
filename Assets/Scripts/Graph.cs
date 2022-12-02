@@ -95,7 +95,7 @@ public class Graph
                     if (x < graphWidth && y < graphHeight && x >= 0 && y >= 0) //If not then there is no square to connect
                     {
                         squares[i, j].SetAdjacentSquare(squares[x, y]);
-                        squares[x, y].SetAdjacentSquare(squares[i, j]);
+                        //squares[x, y].SetAdjacentSquare(squares[i, j]);
                     }
                 }
             }
@@ -219,13 +219,13 @@ public class Graph
             newBoardState.SetMove(move);
             if (currentTurnColor == Color.White)
             {
-                newBoardState.squares[move.X(), move.Y()].SetColor(Color.Black);
-                newBoardState.ProbeGraph(move.X(), move.Y(), Color.Black);
+                newBoardState.squares[move.X(), move.Y()].SetColor(Color.White);
+                newBoardState.ProbeGraph(move.X(), move.Y(), Color.White);
             }
             else
             {
-                newBoardState.squares[move.X(), move.Y()].SetColor(Color.White);
-                newBoardState.ProbeGraph(move.X(), move.Y(), Color.White);
+                newBoardState.squares[move.X(), move.Y()].SetColor(Color.Black);
+                newBoardState.ProbeGraph(move.X(), move.Y(), Color.Black);
             }
 
             float numberOfBlackNodes = newBoardState.CountBlackNodes();
