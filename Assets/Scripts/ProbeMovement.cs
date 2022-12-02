@@ -17,6 +17,7 @@ public class ProbeMovement : MonoBehaviour
         //StartCoroutine(activateDelay());
         //GetComponent<Rigidbody2D>().velocity = new Vector2(-2, 2);
         tokens = new List<GameObject>();
+        Destroy(gameObject, 1.5f);
     }
 
     // Update is called once per frame

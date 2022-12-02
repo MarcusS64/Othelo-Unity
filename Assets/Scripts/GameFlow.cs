@@ -20,6 +20,8 @@ public class GameFlow : MonoBehaviour
     [SerializeField] public static int totalWhite = 0;
     [SerializeField] public static int totalBlack = 0;
     [SerializeField] public static Agent agent;
+
+    public static bool playerWhite;
     // Start is called before the first frame update
     void Start()
     {
@@ -52,6 +54,7 @@ public class GameFlow : MonoBehaviour
         }
 
         currentTurn = "White";
+        playerWhite = true;
         nextReady = true;
     }
 

@@ -36,7 +36,7 @@ public class ClickOn : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (GameFlow.currentTurn == "White")
+        if (GameFlow.currentTurn == "White" && GameFlow.playerWhite)
         {
             Instantiate(tokenObj_w, transform.position, tokenObj_w.rotation);
             StartCoroutine(waitToChange());
@@ -47,21 +47,23 @@ public class ClickOn : MonoBehaviour
                 probes[i].GetComponent<ProbeMovement>().SetDirection(coords[i].x, coords[i].y);
             }
             GameFlow.totalWhite += 1;
-            GameFlow.SetColorForSquare(gameObject.transform.position, Color.White); 
+            GameFlow.SetColorForSquare(gameObject.transform.position, Color.White);
+
+            GameFlow.playerWhite = false;
         }
-        else
-        {
-            Instantiate(tokenObj_b, transform.position, tokenObj_b.rotation);
-            StartCoroutine(waitToChange());
-            GetComponent<BoxCollider2D>().enabled = false;
-            for (int i = 0; i < coords.Length; i++)
-            {
-                probes.Add(Instantiate(probeObj, transform.position, transform.rotation));
-                probes[i].GetComponent<ProbeMovement>().SetDirection(coords[i].x, coords[i].y);
-            }
-            GameFlow.totalBlack += 1;
-            GameFlow.SetColorForSquare(gameObject.transform.position, Color.Black);
-        }
+        //else
+        //{
+        //    Instantiate(tokenObj_b, transform.position, tokenObj_b.rotation);
+        //    StartCoroutine(waitToChange());
+        //    GetComponent<BoxCollider2D>().enabled = false;
+        //    for (int i = 0; i < coords.Length; i++)
+        //    {
+        //        probes.Add(Instantiate(probeObj, transform.position, transform.rotation));
+        //        probes[i].GetComponent<ProbeMovement>().SetDirection(coords[i].x, coords[i].y);
+        //    }
+        //    GameFlow.totalBlack += 1;
+        //    GameFlow.SetColorForSquare(gameObject.transform.position, Color.Black);
+        //}
     }
 
     private void CheckProbes()
@@ -71,8 +73,8 @@ public class ClickOn : MonoBehaviour
 
     IEnumerator waitToChange()
     {
-        yield return new WaitForSeconds(4);
-        if(GameFlow.currentTurn == "White")
+        yield return new WaitForSeconds(2);
+        if (GameFlow.currentTurn == "White")
         {
             GameFlow.currentTurn = "Black";
         }

@@ -175,14 +175,14 @@ public class Agent : MonoBehaviour
         retracePath(currentBoard, bestBoardAlternative);
     }
 
-    private void generateTree(Graph childboard)
+    private void generateTree(Graph currentBoard)
     {
-        childboard.FindAvailableMoves();
-        childboard.FindAvailableStates();
+        currentBoard.FindAvailableMoves();
+        currentBoard.FindAvailableStates();
 
         depthOfSearch++;
 
-        foreach (Graph child in childboard.children)
+        foreach (Graph child in currentBoard.children)
         {
             if (depthOfSearch >= maxDepthOfSearch)
             {
@@ -193,14 +193,14 @@ public class Agent : MonoBehaviour
         }
     }
 
-    private void alphaBetaPruningAlgorithm(Graph CurrentBoard)
+    private void alphaBetaPruningAlgorithm(Graph currentBoard)
     {
-
+        //Go through all nodes and look for lowest value on max and highest value on min, but prune once you find the value
     }
 
     private void minMaxAlgorithm(Graph currentBoard)
     {
-
+        //Go through all nodes and look for the lowest value on max and highest value on min
     }
 
     void retracePath(Graph startGraph, Graph goalGraph)
@@ -278,7 +278,7 @@ public class Agent : MonoBehaviour
 
     IEnumerator waitToChange()
     {
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(2);
         if (GameFlow.currentTurn == "White")
         {
             GameFlow.currentTurn = "Black";
@@ -286,6 +286,7 @@ public class Agent : MonoBehaviour
         else
         {
             GameFlow.currentTurn = "White";
+            GameFlow.playerWhite = true;
         }
         GameFlow.probeChange = Change.No;
         Debug.Log(GameFlow.currentTurn);
