@@ -21,7 +21,6 @@ public class Agent : MonoBehaviour
     List<List<Graph>> ListOfDepth = new List<List<Graph>>();
     List<Node> possibleMoves = new List<Node>();
     List<GameObject> probes = new List<GameObject>();
-    //Stack<Graph> s = new Stack<Graph>();
     float alpha, beta;
 
     [SerializeField] Transform tokenObj_w;
@@ -61,15 +60,14 @@ public class Agent : MonoBehaviour
                 ResetAgent();
                 active = false;
                 foundMove = false;
+                timer = 0;
             }
         }
     }
 
     private void FindRandomMove()
     {
-
-        Graph currentBoard = new Graph(GameFlow.board.GetWidth(), GameFlow.board.GetHeight(), depthOfSearch);
-        CopyParentToChild(currentBoard, GameFlow.board);
+        Graph currentBoard = CopyParentToChild(GameFlow.board);
         currentBoard.SetTurnColor(agentColor);
 
         currentBoard.FindAvailableMoves();
@@ -107,8 +105,7 @@ public class Agent : MonoBehaviour
         List<Graph> possibleStates = new List<Graph>();
         foreach (Node move in possibleMoves)
         {
-            Graph newBoardState = new Graph(parentGraph.GetWidth(), parentGraph.GetHeight(), depthOfSearch);
-            CopyParentToChild(newBoardState, parentGraph);
+            Graph newBoardState = CopyParentToChild(parentGraph); 
             newBoardState.SetParent(parentGraph);
             newBoardState.SetMove(move);
             if (isMyTurn)
@@ -140,20 +137,27 @@ public class Agent : MonoBehaviour
 
     }
 
-    private void CopyParentToChild(Graph child, Graph parent)
+    private Graph CopyParentToChild(Graph parent)
     {
+        Graph child = new Graph(parent.GetWidth(), parent.GetHeight(), depthOfSearch);
+
         for (int i = 0; i < child.GetWidth(); i++)
         {
             for (int j = 0; j < child.GetHeight(); j++)
             {
-                if (parent.squares[i, j].visited) child.squares[i, j].visited = true;
-                child.squares[i, j].color = parent.squares[i, j].color;
-                child.squares[i, j].adjacentSquares = parent.squares[i, j].adjacentSquares;
-                child.squares[i, j].worldPosition = parent.squares[i, j].worldPosition;
-                child.squares[i, j].x = parent.squares[i, j].x;
-                child.squares[i, j].y = parent.squares[i, j].y;
+                Node n = new Node(i, j);
+
+                n.color = parent.squares[i, j].color;
+                n.adjacentSquares = parent.squares[i, j].adjacentSquares;
+                n.worldPosition = parent.squares[i, j].worldPosition;
+                n.x = parent.squares[i, j].x;
+                n.y = parent.squares[i, j].y;
+
+                child.squares[i, j] = n;
             }
         }
+
+        return child;
     }
 
     private void SearchBestMove()
@@ -165,8 +169,7 @@ public class Agent : MonoBehaviour
 
         bestBoardAlternative = null;
 
-        Graph currentBoard = new Graph(GameFlow.board.GetWidth(), GameFlow.board.GetHeight(), depthOfSearch);
-        CopyParentToChild(currentBoard, GameFlow.board);
+        Graph currentBoard = CopyParentToChild(GameFlow.board);
         currentBoard.SetTurnColor(agentColor);
 
         generateTree(currentBoard);
@@ -208,7 +211,7 @@ public class Agent : MonoBehaviour
 
         if (currentBoard.Depth % 2 == 0)
         {
-            if (currentBoard.CountBlackNodes() >= alpha)
+            if (currentBoard.CountBlackNodes() > alpha)
             {
                 alpha = currentBoard.CountBlackNodes();
                 bestBoardAlternative = currentBoard;
@@ -217,7 +220,7 @@ public class Agent : MonoBehaviour
         }
         else
         {
-            if (currentBoard.CountBlackNodes() <= beta)
+            if (currentBoard.CountBlackNodes() < beta)
             {
                 beta = currentBoard.CountBlackNodes();
                 bestBoardAlternative = currentBoard;
@@ -235,7 +238,7 @@ public class Agent : MonoBehaviour
     {
         Graph currentGraph = leaf;
 
-        while (currentGraph.GetParent() != root)
+        while (currentGraph.GetParent() != root && currentGraph.GetParent() != null)
         {
             currentGraph = currentGraph.GetParent();
         }
@@ -311,8 +314,8 @@ public class Agent : MonoBehaviour
     private void ResetAgent()
     {
         timer = 0;
-        alpha = 0;
-        beta = 0;
+        alpha = -Mathf.Infinity;
+        beta = Mathf.Infinity;
         bestPlacement = null;
     }
 }

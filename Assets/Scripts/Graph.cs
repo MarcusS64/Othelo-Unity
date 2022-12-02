@@ -23,8 +23,7 @@ public class Graph
     public int whiteNodes, blackNodes;
     public bool visited;
     public Color currentTurnColor;
-    //public Node[] PlayerGoalSquares { get; private set; }
-    //public Node[] OpponentGoalSquares { get; private set; }
+
     #endregion   
 
     public Graph(int N, int M, int generation)
@@ -214,7 +213,7 @@ public class Graph
     {
         foreach (Node move in possibleMoves)
         {
-            Graph newBoardState = new Graph(graphWidth, graphHeight, Depth + 1);
+            Graph newBoardState = CopyParentToChild(this);
             CopyParentToChild(newBoardState);
             newBoardState.SetParent(this);
             newBoardState.SetMove(move);
@@ -235,23 +234,27 @@ public class Graph
         }
     }
 
-    private void CopyParentToChild(Graph child)
+    private Graph CopyParentToChild(Graph parent)
     {
+        Graph child = new Graph(parent.GetWidth(), parent.GetHeight(), Depth + 1);
+
         for (int i = 0; i < child.GetWidth(); i++)
         {
             for (int j = 0; j < child.GetHeight(); j++)
             {
-                //child.squares[i, j] = squares[i, j];
-                //child.squares[i, j].visited = false;
+                Node n = new Node(i, j);
 
-                if (squares[i, j].visited) child.squares[i, j].visited = true;
-                child.squares[i,j].color = squares[i, j].color;
-                child.squares[i, j].adjacentSquares = squares[i, j].adjacentSquares;
-                child.squares[i, j].worldPosition = squares[i, j].worldPosition;
-                child.squares[i, j].x = squares[i, j].x;
-                child.squares[i, j].y = squares[i, j].y;
+                n.color = parent.squares[i, j].color;
+                n.adjacentSquares = parent.squares[i, j].adjacentSquares;
+                n.worldPosition = parent.squares[i, j].worldPosition;
+                n.x = parent.squares[i, j].x;
+                n.y = parent.squares[i, j].y;
+
+                child.squares[i, j] = n;
             }
         }
+
+        return child;
     }
 
 
