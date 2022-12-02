@@ -170,7 +170,7 @@ public class Agent : MonoBehaviour
         bestBoardAlternative = null;
 
         Graph currentBoard = CopyParentToChild(GameFlow.board);
-        currentBoard.SetTurnColor(agentColor);
+        currentBoard.SetTurnColor(Color.White);
 
         generateTree(currentBoard);
 

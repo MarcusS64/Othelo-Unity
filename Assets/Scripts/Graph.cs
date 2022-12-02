@@ -217,15 +217,18 @@ public class Graph
             CopyParentToChild(newBoardState);
             newBoardState.SetParent(this);
             newBoardState.SetMove(move);
+
             if (currentTurnColor == Color.White)
-            {
-                newBoardState.squares[move.X(), move.Y()].SetColor(Color.White);
-                newBoardState.ProbeGraph(move.X(), move.Y(), Color.White);
-            }
-            else
             {
                 newBoardState.squares[move.X(), move.Y()].SetColor(Color.Black);
                 newBoardState.ProbeGraph(move.X(), move.Y(), Color.Black);
+                newBoardState.SetTurnColor(Color.White);
+            }
+            else
+            {
+                newBoardState.squares[move.X(), move.Y()].SetColor(Color.White);
+                newBoardState.ProbeGraph(move.X(), move.Y(), Color.White);
+                newBoardState.SetTurnColor(Color.Black);
             }
 
             float numberOfBlackNodes = newBoardState.CountBlackNodes();
