@@ -5,16 +5,12 @@ using UnityEngine;
 public class Node
 {
     #region Properties
-    int x, y;
-    Node parent;
+    public int x, y;
     public List<Node> adjacentSquares;
     public bool visited;
     public bool changeColor;
     public Color color;
     public Vector2 worldPosition;
-
-    public void SetParent(Node _parent) { parent = _parent; }
-    public Node GetParent() { return parent; }
     #endregion
 
     public Node(int x, int y)

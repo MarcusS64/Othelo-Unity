@@ -1,6 +1,8 @@
+using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking.Types;
 
 public class Graph
 {
@@ -33,7 +35,6 @@ public class Graph
             for (int j = 0; j < M; j++)
             {
                 squares[i, j] = new Node(i, j);
-
             }
         }
         ConnectEverySquare();
@@ -240,8 +241,15 @@ public class Graph
         {
             for (int j = 0; j < child.GetHeight(); j++)
             {
-                child.squares[i, j] = squares[i, j];
-                child.squares[i, j].visited = false;
+                //child.squares[i, j] = squares[i, j];
+                //child.squares[i, j].visited = false;
+
+                if (squares[i, j].visited) child.squares[i, j].visited = true;
+                child.squares[i,j].color = squares[i, j].color;
+                child.squares[i, j].adjacentSquares = squares[i, j].adjacentSquares;
+                child.squares[i, j].worldPosition = squares[i, j].worldPosition;
+                child.squares[i, j].x = squares[i, j].x;
+                child.squares[i, j].y = squares[i, j].y;
             }
         }
     }

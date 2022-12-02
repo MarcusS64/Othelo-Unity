@@ -52,8 +52,8 @@ public class Agent : MonoBehaviour
 
             if (timer <= maxTimeOfSearch && !foundMove)
             {
-                //SearchBestMove();
-                FindRandomMove();
+                SearchBestMove();
+                //FindRandomMove();
             }
             else
             {
@@ -67,7 +67,7 @@ public class Agent : MonoBehaviour
 
     private void FindRandomMove()
     {
-        
+
         Graph currentBoard = new Graph(GameFlow.board.GetWidth(), GameFlow.board.GetHeight(), depthOfSearch);
         CopyParentToChild(currentBoard, GameFlow.board);
         currentBoard.SetTurnColor(agentColor);
@@ -146,8 +146,12 @@ public class Agent : MonoBehaviour
         {
             for (int j = 0; j < child.GetHeight(); j++)
             {
-                child.squares[i, j] = parent.squares[i, j];
-                child.squares[i, j].visited = false;
+                if (parent.squares[i, j].visited) child.squares[i, j].visited = true;
+                child.squares[i, j].color = parent.squares[i, j].color;
+                child.squares[i, j].adjacentSquares = parent.squares[i, j].adjacentSquares;
+                child.squares[i, j].worldPosition = parent.squares[i, j].worldPosition;
+                child.squares[i, j].x = parent.squares[i, j].x;
+                child.squares[i, j].y = parent.squares[i, j].y;
             }
         }
     }
@@ -167,12 +171,10 @@ public class Agent : MonoBehaviour
 
         generateTree(currentBoard);
 
-        //find bestBoardAlternative by comparing alpha and beta
-
         if (alphaBetaPruning) alphaBetaPruningAlgorithm(currentBoard);
         else minMaxAlgorithm(currentBoard);
 
-        retracePath(currentBoard, bestBoardAlternative);
+        retracePath(bestBoardAlternative, currentBoard);
     }
 
     private void generateTree(Graph currentBoard)
@@ -184,33 +186,62 @@ public class Agent : MonoBehaviour
 
         foreach (Graph child in currentBoard.children)
         {
-            if (depthOfSearch >= maxDepthOfSearch)
+            if (depthOfSearch > maxDepthOfSearch)
             {
                 depthOfSearch--;
                 return;
             }
             generateTree(child);
         }
+        depthOfSearch--;
     }
 
     private void alphaBetaPruningAlgorithm(Graph currentBoard)
     {
-        //Go through all nodes and look for lowest value on max and highest value on min, but prune once you find the value
+        if (currentBoard.children.Count() > 0)
+        {
+            foreach (Graph child in currentBoard.children)
+            {
+                alphaBetaPruningAlgorithm(child);
+            }
+        }
+
+        if (currentBoard.Depth % 2 == 0)
+        {
+            if (currentBoard.CountBlackNodes() >= alpha)
+            {
+                alpha = currentBoard.CountBlackNodes();
+                bestBoardAlternative = currentBoard;
+            }
+            return;
+        }
+        else
+        {
+            if (currentBoard.CountBlackNodes() <= beta)
+            {
+                beta = currentBoard.CountBlackNodes();
+                bestBoardAlternative = currentBoard;
+            }
+            return;
+        }
     }
 
     private void minMaxAlgorithm(Graph currentBoard)
     {
-        //Go through all nodes and look for the lowest value on max and highest value on min
+
     }
 
-    void retracePath(Graph startGraph, Graph goalGraph)
+    void retracePath(Graph leaf, Graph root)
     {
-        Graph currentGraph = goalGraph;
+        Graph currentGraph = leaf;
 
-        while (currentGraph != startGraph)
+        while (currentGraph.GetParent() != root)
         {
             currentGraph = currentGraph.GetParent();
         }
+
+        myMove = currentGraph.GetMove();
+        foundMove = true;
     }
 
     public void ToggleActivation()
@@ -220,21 +251,6 @@ public class Agent : MonoBehaviour
 
     private void PlaceToken()
     {
-        //if (GameFlow.currentTurn == "White")
-        //{
-        //    Instantiate(tokenObj_w, transform.position, tokenObj_w.rotation);
-        //    GameFlow.currentTurn = "Black";
-        //    GetComponent<BoxCollider2D>().enabled = false;
-        //    Instantiate(probeObj, transform.position, probeObj.rotation);
-        //}
-        //else
-        //{
-        //    Instantiate(tokenObj_b, transform.position, tokenObj_b.rotation);
-        //    GameFlow.currentTurn = "White";
-        //    GetComponent<BoxCollider2D>().enabled = false;
-        //    Instantiate(probeObj, transform.position, probeObj.rotation);
-        //}
-
         //transform.position should be the position on the board/move that it picked by myMove
 
         Vector2 tokenPos = myMove.worldPosition;
