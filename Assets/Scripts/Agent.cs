@@ -51,8 +51,8 @@ public class Agent : MonoBehaviour
 
             if (timer <= maxTimeOfSearch && !foundMove)
             {
-                SearchBestMove();
-                //FindRandomMove();
+                //SearchBestMove();
+                FindRandomMove();
             }
             else
             {
@@ -72,69 +72,9 @@ public class Agent : MonoBehaviour
 
         currentBoard.FindAvailableMoves();
 
-        myMove = currentBoard.possibleMoves[Random.Range(0, possibleMoves.Count - 1)];
+        myMove = currentBoard.possibleMoves[Random.Range(0, possibleMoves.Count)];
 
         foundMove = true;
-    }
-
-    private void FindAvailableMoves(Graph board) //Should be done once per board state
-    {
-        graph = board;
-        possibleMoves.Clear();
-        for (int i = 0; i < board.GetWidth(); i++)
-        {
-            for (int j = 0; j < board.GetHeight(); j++)
-            {
-                if (graph.squares[i, j].GetColor() != Color.None)
-                {
-                    foreach (Node square in graph.squares[i, j].adjacentSquares)
-                    {
-                        if (square.color == Color.None && !square.visited)
-                        {
-                            possibleMoves.Add(square);
-                            square.visited = true;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void FindAvailableStates(Graph parentGraph) //Create a new child graph for each possible move for the parent graph
-    {
-        List<Graph> possibleStates = new List<Graph>();
-        foreach (Node move in possibleMoves)
-        {
-            Graph newBoardState = CopyParentToChild(parentGraph); 
-            newBoardState.SetParent(parentGraph);
-            newBoardState.SetMove(move);
-            if (isMyTurn)
-            {
-                newBoardState.squares[move.X(), move.Y()].SetColor(agentColor);
-                newBoardState.ProbeGraph(move.X(), move.Y(), agentColor);
-            }
-            else
-            {
-                newBoardState.squares[move.X(), move.Y()].SetColor(Color.White);
-                newBoardState.ProbeGraph(move.X(), move.Y(), Color.White);
-            }
-
-            float numberOfBlackNodes = newBoardState.CountBlackNodes();
-
-            possibleStates.Add(newBoardState);
-        }
-
-        ListOfDepth.Add(possibleStates);
-
-        if (isMyTurn)
-        {
-            isMyTurn = false;
-        }
-        else
-        {
-            isMyTurn = true;
-        }
-
     }
 
     private Graph CopyParentToChild(Graph parent)
@@ -145,15 +85,17 @@ public class Agent : MonoBehaviour
         {
             for (int j = 0; j < child.GetHeight(); j++)
             {
-                Node n = new Node(i, j);
+                child.squares[i, j].color = parent.squares[i, j].color;
+                child.squares[i, j].SetWorldPos(parent.squares[i, j].worldPosition.x, parent.squares[i, j].worldPosition.y);
+                //Node n = new Node(i, j);
 
-                n.color = parent.squares[i, j].color;
-                n.adjacentSquares = parent.squares[i, j].adjacentSquares;
-                n.worldPosition = parent.squares[i, j].worldPosition;
-                n.x = parent.squares[i, j].x;
-                n.y = parent.squares[i, j].y;
+                //n.color = parent.squares[i, j].color;
+                //n.adjacentSquares = parent.squares[i, j].adjacentSquares;
+                //n.worldPosition = parent.squares[i, j].worldPosition;
+                //n.x = parent.squares[i, j].x;
+                //n.y = parent.squares[i, j].y;
 
-                child.squares[i, j] = n;
+                //child.squares[i, j] = n;
             }
         }
 
@@ -254,8 +196,6 @@ public class Agent : MonoBehaviour
 
     private void PlaceToken()
     {
-        //transform.position should be the position on the board/move that it picked by myMove
-
         Vector2 tokenPos = myMove.worldPosition;
 
         GameObject[] tiles = GameObject.FindGameObjectsWithTag("Empty");
@@ -307,7 +247,7 @@ public class Agent : MonoBehaviour
             GameFlow.currentTurn = "White";
             GameFlow.playerWhite = true;
         }
-        GameFlow.probeChange = Change.No;
+        //GameFlow.probeChange = Change.No;
         Debug.Log(GameFlow.currentTurn);
     }
 

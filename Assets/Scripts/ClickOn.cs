@@ -8,7 +8,6 @@ public class ClickOn : MonoBehaviour
     public Transform tokenObj_w;
     public Transform tokenObj_b;
     public GameObject probeObj;
-    private int[,] directions = new int[,] { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
     (int x, int y)[] coords = new (int, int)[] { (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1) };
     private List<GameObject> probes;
 
@@ -82,7 +81,7 @@ public class ClickOn : MonoBehaviour
         {
             GameFlow.currentTurn = "White";
         }
-        GameFlow.probeChange = Change.No;
+        //GameFlow.probeChange = Change.No;
         Debug.Log(GameFlow.currentTurn);
         GameFlow.agent.ToggleActivation();
     }

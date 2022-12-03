@@ -8,12 +8,9 @@ public class Graph
 {
     #region Properties
     private Graph parent;
-    public Node[,] squares; //Was static
+    public Node[,] squares;
     private int graphWidth, graphHeight;
-    public List<Node> Open { get; private set; }
-    public List<Node> Closed { get; private set; }
 
-    public Node CurrentNode { get; private set; }
     public int Depth { get; private set; }
     public void SetParent(Graph _parent) { parent = _parent; }
     public Graph GetParent() { return parent; }
@@ -39,15 +36,10 @@ public class Graph
         ConnectEverySquare();
         children = new List<Graph>();
         possibleMoves = new List<Node>();
-
-        //ConnectSquares(N, M, true);
-        //ConnectSquares(N, M, false);
     }
 
     private void SetProperties(int N, int M, int depth)
     {
-        Open = new List<Node>();
-        Closed = new List<Node>();
         squares = new Node[N, M];
         graphWidth = N;
         graphHeight = M;
@@ -57,29 +49,6 @@ public class Graph
     public void SetTurnColor(Color color)
     {
         currentTurnColor = color;
-    }
-
-    private void ConnectSquares(int width, int height, bool horizontal) //Does not connect the diagonal
-    {
-        if (horizontal) { width--; }
-        else { height--; }
-        for (int i = 0; i < width; i++)
-        {
-            for (int j = 0; j < height; j++)
-            {
-                if (horizontal)
-                {
-                    squares[i, j].SetAdjacentSquare(squares[i + 1, j]);
-                    squares[i + 1, j].SetAdjacentSquare(squares[i, j]);
-
-                }
-                else //ie vertical
-                {
-                    squares[i, j].SetAdjacentSquare(squares[i, j + 1]);
-                    squares[i, j + 1].SetAdjacentSquare(squares[i, j]);
-                }
-            }
-        }
     }
 
     private void ConnectEverySquare() //Does connect the diagonal
@@ -95,7 +64,6 @@ public class Graph
                     if (x < graphWidth && y < graphHeight && x >= 0 && y >= 0) //If not then there is no square to connect
                     {
                         squares[i, j].SetAdjacentSquare(squares[x, y]);
-                        //squares[x, y].SetAdjacentSquare(squares[i, j]);
                     }
                 }
             }
@@ -245,49 +213,22 @@ public class Graph
         {
             for (int j = 0; j < child.GetHeight(); j++)
             {
-                Node n = new Node(i, j);
+                child.squares[i, j].color = parent.squares[i, j].color;
+                child.squares[i, j].SetWorldPos(parent.squares[i, j].worldPosition.x, parent.squares[i, j].worldPosition.y);
+                //Node n = new Node(i, j);
 
-                n.color = parent.squares[i, j].color;
-                n.adjacentSquares = parent.squares[i, j].adjacentSquares;
-                n.worldPosition = parent.squares[i, j].worldPosition;
-                n.x = parent.squares[i, j].x;
-                n.y = parent.squares[i, j].y;
+                //n.color = parent.squares[i, j].color;
+                //n.adjacentSquares = parent.squares[i, j].adjacentSquares;
+                //n.worldPosition = parent.squares[i, j].worldPosition;
+                //n.x = parent.squares[i, j].x;
+                //n.y = parent.squares[i, j].y;
 
-                child.squares[i, j] = n;
+                //child.squares[i, j] = n;
             }
         }
 
         return child;
     }
-
-
-    #region Pathfinding
-    public Node FindSquare(int x, int y)
-    {
-        foreach (Node square in squares)
-        {
-            if (x == square.X() && y == square.Y())
-            {
-                return square;
-            }
-        }
-        return null;
-    }
-
-    public void SetCurrentNode(Node square)
-    {
-        CurrentNode = square;
-    }
-
-    public void RepairLinks(Node first, Node removedFromFirst, Node second, Node removedFromSecond)
-    {
-        first.SetAdjacentSquare(removedFromFirst);
-        removedFromFirst.SetAdjacentSquare(first);
-
-        second.SetAdjacentSquare(removedFromSecond);
-        removedFromSecond.SetAdjacentSquare(second);
-    }
-    #endregion
 
     public int GetWidth()
     {
