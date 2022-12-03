@@ -1,8 +1,10 @@
 using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking.Types;
+using UnityEngine.UIElements;
 
 public class Graph
 {
@@ -105,10 +107,12 @@ public class Graph
         List<Probe> probes = new List<Probe>();
         for (int i = 0; i < GameFlow.coords.Length; i++)
         {
-            probes.Add(new Probe(GameFlow.coords[i].x, GameFlow.coords[i].x, turnColor)); //need the agent color here
+            probes.Add(new Probe(GameFlow.coords[i].x, GameFlow.coords[i].y, turnColor)); //need the agent color here
+            probes[i].SetNewStart(startX, startY);
         }
 
         bool allProbesDone = false;
+        int number = 0;
 
         do
         {
@@ -122,6 +126,7 @@ public class Graph
                         if (squares[probe.GetX(), probe.GetY()].color == Color.None)
                         {
                             probe.done = true;
+                            number++;
                         }
                         else if (squares[probe.GetX(), probe.GetY()].color != probe.currentStateTurn)
                         {
@@ -131,24 +136,18 @@ public class Graph
                         {
                             probe.FlipNodes();
                             probe.done = true;
+                            number++;
                         }
                     }
                     else
                     {
                         probe.done = true;
+                        number++;
                     }
                 }                                
             }
 
-            int number = 0;
-            foreach (Probe probe in probes)
-            {               
-                if (probe.done)
-                {
-                    number++;
-                }
-            }
-            if(number == probes.Count)
+            if(number >= probes.Count)
             {
                 allProbesDone = true;
             }
@@ -189,18 +188,33 @@ public class Graph
             if (currentTurnColor == Color.White)//Curent turn of the parent 
             {
                 newBoardState.squares[move.X(), move.Y()].SetColor(Color.Black);//Color of the next move to make
-                //newBoardState.ProbeGraph(move.X(), move.Y(), Color.Black);
+                newBoardState.ProbeGraph(move.X(), move.Y(), Color.Black);
                 newBoardState.SetTurnColor(Color.Black);
             }
             else
             {
                 newBoardState.squares[move.X(), move.Y()].SetColor(Color.White);
-                //newBoardState.ProbeGraph(move.X(), move.Y(), Color.White);
+                newBoardState.ProbeGraph(move.X(), move.Y(), Color.White);
                 newBoardState.SetTurnColor(Color.White);
             }
 
             children.Add(newBoardState);
         }
+    }
+
+    public int emptyNodes()
+    {
+        int count = 0;
+
+        for (int i = 0; i < graphWidth; i++)
+        {
+            for (int j = 0; j < graphHeight; j++)
+            {
+                if (squares[i,j].color == Color.None) count++;
+            }
+        }
+
+        return count;
     }
 
     private Graph CopyParentToChild(Graph parent)

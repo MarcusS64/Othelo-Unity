@@ -33,6 +33,7 @@ public class Agent : MonoBehaviour
     [SerializeField] int amountOfNodesExamined;
 
     bool foundMove;
+    bool doOnce;
 
     void Start()
     {
@@ -48,6 +49,12 @@ public class Agent : MonoBehaviour
         if (active)
         {
             timer += Time.deltaTime;
+            if (!doOnce)
+            {
+                amountOfNodesExamined = 0;
+                depthOfSearch = 0;
+                doOnce = true;
+            }
 
             if (timer <= maxTimeOfSearch && !foundMove)
             {
@@ -57,9 +64,10 @@ public class Agent : MonoBehaviour
             else
             {
                 PlaceToken();
-                ResetAgent();
+                //ResetAgent();
                 active = false;
                 foundMove = false;
+                doOnce = false;
                 timer = 0;
             }
         }
@@ -123,20 +131,21 @@ public class Agent : MonoBehaviour
 
     private void generateTree(Graph currentBoard)
     {
+        depthOfSearch++;
+
+        if (depthOfSearch > maxDepthOfSearch || currentBoard.emptyNodes() <= 0)
+        {
+            depthOfSearch--;
+            return;
+        }
         currentBoard.FindAvailableMoves();
         currentBoard.FindAvailableStates();
 
-        depthOfSearch++;
-
         foreach (Graph child in currentBoard.children)
         {
-            if (depthOfSearch > maxDepthOfSearch)
-            {
-                depthOfSearch--;
-                return;
-            }
             generateTree(child);
         }
+
         depthOfSearch--;
     }
 
@@ -156,6 +165,7 @@ public class Agent : MonoBehaviour
             {
                 alpha = currentBoard.CountBlackNodes();
                 bestBoardAlternative = currentBoard;
+                amountOfNodesExamined++;
             }
             return;
         }
@@ -165,6 +175,7 @@ public class Agent : MonoBehaviour
             {
                 beta = currentBoard.CountBlackNodes();
                 bestBoardAlternative = currentBoard;
+                amountOfNodesExamined++;
             }
             return;
         }
