@@ -217,6 +217,19 @@ public class Graph
         return count;
     }
 
+    public Node lastNode()
+    {
+        for (int i = 0; i < graphWidth; i++)
+        {
+            for (int j = 0; j < graphHeight; j++)
+            {
+                if (squares[i, j].color == Color.None) return squares[i, j];
+            }
+        }
+
+        return null;
+    }
+
     private Graph CopyParentToChild(Graph parent)
     {
         Graph child = new Graph(parent.GetWidth(), parent.GetHeight(), Depth + 1);

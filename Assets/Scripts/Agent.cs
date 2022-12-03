@@ -8,7 +8,6 @@ public class Agent : MonoBehaviour
 {
     double timer;
     [SerializeField] double maxTimeOfSearch;
-    [SerializeField] bool alphaBetaPruning;
     public bool active;
 
     Node node;
@@ -64,7 +63,6 @@ public class Agent : MonoBehaviour
             else
             {
                 PlaceToken();
-                //ResetAgent();
                 active = false;
                 foundMove = false;
                 doOnce = false;
@@ -116,17 +114,24 @@ public class Agent : MonoBehaviour
         depthOfSearch = 0;
         alpha = -Mathf.Infinity;
         beta = Mathf.Infinity;
-
         bestBoardAlternative = null;
 
-        Graph currentBoard = CopyParentToChild(GameFlow.board);
-        currentBoard.SetTurnColor(Color.White);
+        if(GameFlow.board.emptyNodes() > 1)
+        {
+            Graph currentBoard = CopyParentToChild(GameFlow.board);
+            currentBoard.SetTurnColor(Color.White);
 
-        generateTree(currentBoard);
-        if (alphaBetaPruning) alphaBetaPruningAlgorithm(currentBoard);
-        else minMaxAlgorithm(currentBoard);
+            generateTree(currentBoard);
 
-        retracePath(bestBoardAlternative, currentBoard);
+            alphaBetaPruningAlgorithm(currentBoard);
+
+            retracePath(bestBoardAlternative, currentBoard);
+        }
+        else
+        {
+            myMove = GameFlow.board.lastNode();
+            foundMove = true;
+        }
     }
 
     private void generateTree(Graph currentBoard)
@@ -179,11 +184,6 @@ public class Agent : MonoBehaviour
             }
             return;
         }
-    }
-
-    private void minMaxAlgorithm(Graph currentBoard)
-    {
-
     }
 
     void retracePath(Graph leaf, Graph root)

@@ -382,8 +382,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aaf2e4962edeb7429c7acf38372726a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxTimeOfSearch: 5
-  alphaBetaPruning: 0
+  maxTimeOfSearch: 2
+  alphaBetaPruning: 1
   active: 0
   tokenObj_w: {fileID: 7142749954183742815, guid: 064b39d54e9dcd047b12f586d556587b, type: 3}
   tokenObj_b: {fileID: 5150683685733085945, guid: 49a599119f3cd764090a4ae5b330a9a1, type: 3}
