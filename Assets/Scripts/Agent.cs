@@ -51,8 +51,8 @@ public class Agent : MonoBehaviour
 
             if (timer <= maxTimeOfSearch && !foundMove)
             {
-                //SearchBestMove();
-                FindRandomMove();
+                SearchBestMove();
+                //FindRandomMove();
             }
             else
             {
@@ -115,7 +115,6 @@ public class Agent : MonoBehaviour
         currentBoard.SetTurnColor(Color.White);
 
         generateTree(currentBoard);
-
         if (alphaBetaPruning) alphaBetaPruningAlgorithm(currentBoard);
         else minMaxAlgorithm(currentBoard);
 

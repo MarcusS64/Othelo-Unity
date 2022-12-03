@@ -186,20 +186,18 @@ public class Graph
             newBoardState.SetParent(this);
             newBoardState.SetMove(move);
 
-            if (currentTurnColor == Color.White)
+            if (currentTurnColor == Color.White)//Curent turn of the parent 
             {
-                newBoardState.squares[move.X(), move.Y()].SetColor(Color.Black);
-                newBoardState.ProbeGraph(move.X(), move.Y(), Color.Black);
-                newBoardState.SetTurnColor(Color.White);
+                newBoardState.squares[move.X(), move.Y()].SetColor(Color.Black);//Color of the next move to make
+                //newBoardState.ProbeGraph(move.X(), move.Y(), Color.Black);
+                newBoardState.SetTurnColor(Color.Black);
             }
             else
             {
                 newBoardState.squares[move.X(), move.Y()].SetColor(Color.White);
-                newBoardState.ProbeGraph(move.X(), move.Y(), Color.White);
-                newBoardState.SetTurnColor(Color.Black);
+                //newBoardState.ProbeGraph(move.X(), move.Y(), Color.White);
+                newBoardState.SetTurnColor(Color.White);
             }
-
-            float numberOfBlackNodes = newBoardState.CountBlackNodes();
 
             children.Add(newBoardState);
         }
@@ -215,15 +213,6 @@ public class Graph
             {
                 child.squares[i, j].color = parent.squares[i, j].color;
                 child.squares[i, j].SetWorldPos(parent.squares[i, j].worldPosition.x, parent.squares[i, j].worldPosition.y);
-                //Node n = new Node(i, j);
-
-                //n.color = parent.squares[i, j].color;
-                //n.adjacentSquares = parent.squares[i, j].adjacentSquares;
-                //n.worldPosition = parent.squares[i, j].worldPosition;
-                //n.x = parent.squares[i, j].x;
-                //n.y = parent.squares[i, j].y;
-
-                //child.squares[i, j] = n;
             }
         }
 
