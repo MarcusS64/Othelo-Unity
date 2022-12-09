@@ -20,6 +20,7 @@ public class GameFlow : MonoBehaviour
     [SerializeField] public static int totalWhite = 0;
     [SerializeField] public static int totalBlack = 0;
     [SerializeField] public static Agent agent;
+    [SerializeField] int whiteNodes, blackNodes;
 
     public static bool playerWhite;
     // Start is called before the first frame update
@@ -76,6 +77,12 @@ public class GameFlow : MonoBehaviour
     public static Vector2 GetSquareToWorldPos(int squareX, int squareY)
     {
         return new Vector2(squareX * width + posXstart, squareY * height + posYstart);
+    }
+
+    private void Update()
+    {
+        whiteNodes = (int)board.CountWhiteNodes();
+        blackNodes = (int)board.CountBlackNodes();
     }
 
 }
